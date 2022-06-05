@@ -1,0 +1,64 @@
+{
+    "gres": 1,
+    "nprocs": 4,
+    "partitions": [
+        "sched_mit_rafagb",
+        "sched_mit_rafagb_amd"
+    ],
+    "compute_platform": "engaging",
+    "gnu_parallel": "/home/gridsan/saxelrod/apps/parallel-20210822/bin/parallel",
+    "htvs": "/home/saxelrod/repo/htvs/master/htvs",
+    "nff": "/home/saxelrod/repo/nff/master/NeuralForceField",
+    "conda": "/home/saxelrod/anaconda3",
+    "exclusive": false,
+    
+    "init_displ_de": 0.000398,
+    "max_iter": 500,
+    "tol_max_g": 0.0001,
+    "tol_rms_g": 1e-05,
+    "scale_displ_sd_corr": 0.3333,
+    "sd_corr_parabolic_fit": true,
+    "do_sd_corr": true,
+    "interpolate_only": true,
+    "sd_parabolic_fit": true,
+    "adapt_scale_disp": true,
+
+    "scale_displ_sd": 0.01,
+    "alpha_kcal": 15.55,
+    "crossing_scale_displ_sd": 0.0005,
+    "crossing_max_steps": 500,
+
+    "opt_type": "BFGS",
+    "fmax": 0.005,
+    "opt_max_step": 1500,
+    "alpha_kcal": 12.55,
+    "nbr_list_update_freq": 10, 
+
+    "nnid": null,
+    "weightpath": null,
+    "en_key": "energy_0",
+    "model_kwargs": null,
+    "cutoff": 5.0,
+    "device": 0,
+    "cutoff_skin": 2.0,
+    "nbr_list_update_freq": 10, 
+    "directed": true,
+    "requires_large_offsets": false,
+
+    "compute_hessian": false,
+    "temperature": 298.15,
+    "pressure": 101325,
+    "imag_cutoff": -100,
+    "rotor_cutoff": 50,
+
+    "k_isc_params": {"h_so_inv_cm": 20,
+                     "method": "wkb_analytical"},
+
+    "triplet_params": {
+        "nnid": null,
+        "weightpath": null,
+        "en_key": "energy_0",
+        "model_kwargs": null,
+        "cutoff": 5.0
+    }
+}
