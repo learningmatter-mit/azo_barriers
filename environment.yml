@@ -31,11 +31,13 @@ dependencies:
   - charset-normalizer=2.0.12=pyhd8ed1ab_0
   - click=8.1.3=py39hf3d152e_0
   - colorama=0.4.4=pyh9f0ad1d_0
+  - crest=2.12=h9d67668_0
   - cryptography=37.0.1=py39h9ce1e76_0
   - cudatoolkit=11.3.1=h2bc3f7f_2
   - curl=7.83.1=h2283fc2_0
   - cycler=0.11.0=pyhd8ed1ab_0
   - cython=0.29.30=py39h5a03fae_0
+  - decorator=5.1.1=pyhd8ed1ab_0
   - django=4.0=pyhd8ed1ab_0
   - django-filter=2.4.0=py_0
   - django-guardian=2.4.0=pyhd8ed1ab_0
@@ -74,6 +76,7 @@ dependencies:
   - ipython=8.3.0=py39hf3d152e_0
   - itsdangerous=2.1.2=pyhd8ed1ab_0
   - jedi=0.18.1=py39hf3d152e_1
+  - jinja2=3.1.2=pyhd8ed1ab_1
   - jmespath=0.10.0=pyh9f0ad1d_0
   - joblib=1.1.0=pyhd8ed1ab_0
   - jpeg=9e=h166bdaf_1
@@ -136,6 +139,7 @@ dependencies:
   - markupsafe=2.1.1=py39hb9d737c_1
   - matplotlib-base=3.4.3=py39h2fa2bec_2
   - matplotlib-inline=0.1.3=pyhd8ed1ab_0
+  - mctc-lib=0.3.0=hc3ea6d6_0
   - mkl=2020.4=h726a3e6_304
   - monty=2022.4.26=pyhd8ed1ab_0
   - more-itertools=8.13.0=pyhd8ed1ab_0
@@ -159,8 +163,10 @@ dependencies:
   - packaging=21.3=pyhd8ed1ab_0
   - palettable=3.3.0=py_0
   - pandas=1.4.2=py39h1832856_2
+  - parallel=20220522=ha770c72_0
   - parso=0.8.3=pyhd8ed1ab_0
   - pcre=8.45=h9c3ff4c_0
+  - perl=5.32.1=2_h7f98852_perl5
   - pexpect=4.8.0=pyh9f0ad1d_2
   - pickleshare=0.7.5=py_1003
   - pillow=9.1.1=py39hae2aec6_0
@@ -201,6 +207,7 @@ dependencies:
   - ruamel.yaml.clib=0.2.6=py39hb9d737c_1
   - scikit-learn=1.1.1=py39h4037b75_0
   - scipy=1.8.1=py39he49c0e8_0
+  - setuptools=62.3.2=py39hf3d152e_0
   - simplegeneric=0.8.1=py_1
   - six=1.16.0=pyh6c4a22f_0
   - sleef=3.5.1=h9b69904_2
@@ -250,6 +257,7 @@ dependencies:
   - xorg-renderproto=0.11.1=h7f98852_1002
   - xorg-xextproto=7.3.0=h7f98852_1002
   - xorg-xproto=7.0.31=h7f98852_1007
+  - xtb=6.5.0=h9d67668_0
   - xz=5.2.5=h516909a_1
   - yaml=0.2.5=h7f98852_2
   - zeromq=4.3.4=h9c3ff4c_1
@@ -263,7 +271,6 @@ dependencies:
     - bleach==5.0.0
     - cclib==1.7.1
     - debugpy==1.6.0
-    - decorator==5.1.1
     - defusedxml==0.7.1
     - django-debug-toolbar==3.4.0
     - django-extensions==3.1.5
@@ -272,7 +279,6 @@ dependencies:
     - ipykernel==6.13.0
     - ipython-genutils==0.2.0
     - ipywidgets==7.7.0
-    - jinja2==3.1.2
     - jsonschema==4.5.1
     - jupyter==1.0.0
     - jupyter-console==6.4.3
@@ -295,11 +301,10 @@ dependencies:
     - rest-framework-generic-relations==2.1.0
     - sdaxen-python-utilities==0.1.4
     - send2trash==1.8.0
-    - setuptools==62.3.2
     - soupsieve==2.3.2.post1
     - svgwrite==1.4.2
     - terminado==0.15.0
     - tinycss2==1.1.1
     - webencodings==0.5.1
     - widgetsnbextension==3.6.0
-prefix: /home/saxelrod/miniconda3/envs/htvs
+prefix: /home/saxelrod/miniconda3/envs/barriers

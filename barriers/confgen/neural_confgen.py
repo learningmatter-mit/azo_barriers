@@ -591,10 +591,9 @@ def run_cre_check(confs,
                   ethr,
                   rthr,
                   bthr,
-                  ewin,
-                  # xtb_dir,
-                  crest_path):
+                  ewin):
 
+    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'crest')
     base_name = make_rand_string()
     job_dir = os.path.join("/tmp", base_name)
 
@@ -722,10 +721,7 @@ def dedupe(confs, params):
                           ethr=crest_params["ethr"],
                           rthr=crest_params["rthr"],
                           bthr=crest_params["bthr"],
-                          ewin=crest_params["ewin"],
-                          # xtb_dir=parse_path(
-                              # crest_params["xtb_dir"]),
-                          crest_path=parse_path(crest_params["crest_path"]))
+                          ewin=crest_params["ewin"])
     ens = [conf.get_potential_energy().item() for conf in confs]
 
     return confs, ens

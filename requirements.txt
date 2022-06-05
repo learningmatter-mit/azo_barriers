@@ -24,11 +24,13 @@ cftime==1.6.0
 charset-normalizer==2.0.12
 click==8.1.3
 colorama==0.4.4
+crest==2.12
 cryptography==37.0.1
 cudatoolkit==11.3.1
 curl==7.83.1
 cycler==0.11.0
 cython==0.29.30
+decorator==5.1.1
 django==4.0
 django-filter==2.4.0
 django-guardian==2.4.0
@@ -65,6 +67,7 @@ iniconfig==1.1.1
 ipython==8.3.0
 itsdangerous==2.1.2
 jedi==0.18.1
+jinja2==3.1.2
 jmespath==0.10.0
 joblib==1.1.0
 jpeg==9e
@@ -127,6 +130,7 @@ lz4-c==1.9.3
 markupsafe==2.1.1
 matplotlib-base==3.4.3
 matplotlib-inline==0.1.3
+mctc-lib==0.3.0
 mkl==2020.4
 monty==2022.4.26
 more-itertools==8.13.0
@@ -150,8 +154,10 @@ openssl==3.0.3
 packaging==21.3
 palettable==3.3.0
 pandas==1.4.2
+parallel==20220522
 parso==0.8.3
 pcre==8.45
+perl==5.32.1
 pexpect==4.8.0
 pickleshare==0.7.5
 pillow==9.1.1
@@ -192,6 +198,7 @@ ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 scikit-learn==1.1.1
 scipy==1.8.1
+setuptools==62.3.2
 simplegeneric==0.8.1
 six==1.16.0
 sleef==3.5.1
@@ -241,6 +248,7 @@ xorg-libxt==1.2.1
 xorg-renderproto==0.11.1
 xorg-xextproto==7.3.0
 xorg-xproto==7.0.31
+xtb==6.5.0
 xz==5.2.5
 yaml==0.2.5
 zeromq==4.3.4
@@ -253,7 +261,6 @@ beautifulsoup4==4.11.1
 bleach==5.0.0
 cclib==1.7.1
 debugpy==1.6.0
-decorator==5.1.1
 defusedxml==0.7.1
 django-debug-toolbar==3.4.0
 django-extensions==3.1.5
@@ -262,7 +269,6 @@ fastjsonschema==2.15.3
 ipykernel==6.13.0
 ipython-genutils==0.2.0
 ipywidgets==7.7.0
-jinja2==3.1.2
 jsonschema==4.5.1
 jupyter==1.0.0
 jupyter-console==6.4.3
@@ -285,7 +291,6 @@ qtpy==2.1.0
 rest-framework-generic-relations==2.1.0
 sdaxen-python-utilities==0.1.4
 send2trash==1.8.0
-setuptools==62.3.2
 soupsieve==2.3.2.post1
 svgwrite==1.4.2
 terminado==0.15.0

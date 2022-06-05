@@ -24,33 +24,32 @@ from nff.io.ase import AtomsBatch, UNDIRECTED
 from nff.utils import constants as const
 
 from barriers.utils.neuraloptimizer import (translate_template,
-                                      add_all_constraints,
-                                      init_calculator,
-                                      coords_to_xyz,
-                                      get_non_nve,
-                                      get_model,
-                                      confs_to_opt,
-                                      get_trj_file,
-                                      OPT_FILENAME,
-                                      update_with_exclude)
+                                            add_all_constraints,
+                                            init_calculator,
+                                            coords_to_xyz,
+                                            get_non_nve,
+                                            get_model,
+                                            confs_to_opt,
+                                            get_trj_file,
+                                            OPT_FILENAME,
+                                            update_with_exclude)
 
 from barriers.confgen.neural_confgen import (update_params,
-                                     get_params,
-                                     JSON_KEYS,
-                                     parse_args,
-                                     ARGS_PATH,
-                                     get_num_starting_poses,
-                                     parse_path,
-                                     make_xyz_text,
-                                     make_rand_string,
-                                     set_xtb_env,
-                                     bash_command,
-                                     read_unique,
-                                     get_is_done,
-                                     move_general_file,
-                                     FINAL_OPT_FILENAME,
-                                     summarize_final,
-                                     time_to_msg)
+                                             get_params,
+                                             JSON_KEYS,
+                                             parse_args,
+                                             ARGS_PATH,
+                                             get_num_starting_poses,
+                                             parse_path,
+                                             make_xyz_text,
+                                             make_rand_string,
+                                             bash_command,
+                                             read_unique,
+                                             get_is_done,
+                                             move_general_file,
+                                             FINAL_OPT_FILENAME,
+                                             summarize_final,
+                                             time_to_msg)
 
 PERIODICTABLE = Chem.GetPeriodicTable()
 
@@ -1285,8 +1284,6 @@ def run_cre_check(nxyz_list,
                   rthr,
                   bthr,
                   ewin,
-                  xtb_dir,
-                  crest_path,
                   mol_index):
     """
     Same idea as `run_cre_check` in `neural_confgen`, but using atomic numbers, positions
@@ -1295,6 +1292,7 @@ def run_cre_check(nxyz_list,
     can instead just slice their positions and energies into batches
     """
 
+    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'crest')
     base_name = make_rand_string()
     job_dir = os.path.join("/tmp", base_name)
 
@@ -1318,7 +1316,6 @@ def run_cre_check(nxyz_list,
                     energy_list=energy_list[:1],
                     path=conf_0_path)
 
-    set_xtb_env(xtb_dir)
 
     command = ("%s %s -cregen %s -ethr %.6f -rthr %.6f -bthr %.6f -ewin %.6f -enso "
                "> cregen.out" % (crest_path, conf_0_path, confs_path, ethr, rthr,
@@ -1426,9 +1423,7 @@ def batched_dedupe(conf_dic,
                           ethr=crest_params["ethr"],
                           rthr=crest_params["rthr"],
                           bthr=crest_params["bthr"],
-                          ewin=crest_params["ewin"],
-                          xtb_dir=parse_path(crest_params["xtb_dir"]),
-                          crest_path=parse_path(crest_params["crest_path"]))
+                          ewin=crest_params["ewin"])
 
 
 def init_conf_dic(num_mols):
