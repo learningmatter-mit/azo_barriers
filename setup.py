@@ -17,8 +17,6 @@ setup(
     url="https://github.com/learningmatter-mit/azo_barriers",
     packages=find_packages("."),
     scripts=["scripts/get_barriers.py"],
-    python_requires=">=3.8",
-    install_requires=["numpy", "networkx", "pymatgen>=2020.3.2", "scikit-learn"],
     license="MIT",
     description="Package for computing thermal barriers of azobenzene derivatives",
     long_description=read("README.md"),

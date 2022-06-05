@@ -1,7 +1,7 @@
 # Azo barriers
 ```bash
 conda upgrade conda
-conda env create -f environment.yaml
+conda env create -f environment.yml
 ```
 
 Put this in your `~/.bashrc`:
