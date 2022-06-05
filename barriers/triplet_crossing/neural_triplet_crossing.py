@@ -911,26 +911,17 @@ def main(job_dir, info_path):
 
 
 def run_from_command_line():
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--job_dir',
-                        type=str,
-                        default='.',
-                        help=("Where to do the calculation"))
-    parser.add_argument('--config_file',
+    parser.add_argument('--info_file',
                         type=str,
                         default='job_info.json',
                         help=("Name of the job info file"))
 
     args = parser.parse_args()
-    info_path = os.path.join(args.job_dir, args.config_file)
 
-    try:
-        main(job_dir=args.job_dir,
-             info_path=info_path)
-    except Exception as e:
-        print(e)
-        import pdb
-        pdb.post_mortem()
+    main(job_dir=".",
+         info_path=args.info_file)
 
 
 if __name__ == "__main__":

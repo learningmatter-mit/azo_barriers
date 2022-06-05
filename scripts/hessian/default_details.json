@@ -1,0 +1,47 @@
+{
+  
+  "nnid": null,
+  "weightpath": null,
+  "method_names": null,
+
+  "compute_platform": "supercloud",
+  "nprocs": 15,
+  "maxcore": 1000,
+  "set_partitions": false,
+  "partitions": null,
+  "exclusive": false,
+  "conda": null,
+  "use_conda_env": true,
+  "conda_module_load": null,
+  "gnu_parallel": "/home/gridsan/saxelrod/apps/parallel-20210822/bin/parallel",
+  "req_mem": true,
+  "scratch": null,
+
+  "atoms_kwargs": {
+    "cutoff": 5.0,
+    "cutoff_skin": 2.0,
+    "nbr_update_period": 1,
+    "directed": true,
+    "device": 0,
+    "requires_large_offsets": false
+  },
+
+  "calc_kwargs": {
+    "device": 0,
+    "en_key": "energy_0",
+    "properties": [
+      "energy",
+      "forces"
+    ],
+    "model_kwargs": null
+  },
+
+  "device": 0,
+
+  "analytical_hessian": false,  
+  "temperature": 298.15,
+  "pressure": 101325,
+  "imag_cutoff": -100,
+  "rotor_cutoff": 50,
+  "iroot": 0
+}

@@ -28,6 +28,7 @@ CONFIG_PATHS = {"bhhlyp_6-31gs_sf_tddft_engrad_qchem":
 
 COMPLETION_MESSAGE = 'Neural IRC terminated normally.'
 
+
 def get_dx(init_displ_de,
            freq_cm,
            eigvec,
@@ -561,6 +562,7 @@ def convert_irc(irc):
 
     return new_irc
 
+
 def back_convert_irc(irc):
     new_irc = []
     for nxyz in irc:
@@ -569,6 +571,7 @@ def back_convert_irc(irc):
         new_irc.append(nxyz_angs)
 
     return new_irc
+
 
 def run_all(ts_nxyz,
             eigvecs,
@@ -1124,30 +1127,15 @@ def neural_from_file(job_dir,
 
 def run_from_command_line():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--calc_type',
-                        type=str,
-                        choices=['neural', 'dft'],
-                        help=("Method of calculation"))
-    parser.add_argument('--job_dir',
-                        type=str,
-                        default='.',
-                        help=("Where to do the calculation"))
-    parser.add_argument('--config_file',
+    parser.add_argument('--info_file',
                         type=str,
                         default='job_info.json',
                         help=("Name of the job info file"))
 
     args = parser.parse_args()
-    info_path = os.path.join(args.job_dir, args.config_file)
 
-    if args.calc_type == 'neural':
-        neural_from_file(job_dir=args.job_dir,
-                         info_path=info_path)
-    elif args.calc_type == 'dft':
-        raise Exception(("DFT calculations not yet implemented from "
-                         "the command line"))
-    else:
-        raise NotImplementedError
+    neural_from_file(job_dir=".",
+                     info_path=args.info_file)
 
 
 if __name__ == "__main__":
