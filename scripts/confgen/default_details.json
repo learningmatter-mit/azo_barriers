@@ -1,21 +1,11 @@
 {
-	"compute_platform": "supercloud",
-  "nprocs": 8,
-  "maxcore": 1000,
-  "partitions": ["xeon-g6-volta"],
-  "exclusive": false,
-  "conda": null,
-  "use_conda_env": true,
-  "conda_module_load": null,
-  "gnu_parallel": "/home/gridsan/saxelrod/apps/parallel-20210822/bin/parallel",
-  "req_mem": true,
-  "scratch": null,
-  "meta_batch_size": 50,
-
+	
 	"nnid": null, 
-	"method_names": null,
 	"weightpath": null, 
-	"en_key": "energy",
+  "smiles": null,
+  "coords": null,
+
+	"en_key": "energy_0",
 	"model_kwargs": null,
 	"device": 0, 
 	"cutoff": 5.0,
@@ -23,7 +13,6 @@
 	"nbr_list_update_freq": 10, 
 	"directed": true,
 	"requires_large_offsets": false,
-
 
   "md_type": "NoseHooverMetaDynamics",
   "geom_add_time": 1000,
@@ -34,12 +23,8 @@
 	"ttime": 50, 
 	"maxwell_temp": null, 
 	"loginterval": 10, 
-	"num_frames_db_save": 100,
 
-
-  "smiles": null,
-	"fixed_atoms": {"idx": null, 
-	                "template_smiles": null},
+	"fixed_atoms": {"idx": [3, 4, 5, 6], "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"},
 	"constraints": {"hookean": {"bonds": {"idx": null,
 									      			"template_smiles": null,
 							            	  "targets": null,
@@ -56,9 +41,7 @@
 									              "force_consts": 627.5}
 	                }
   },   
-  "details_from_parent": [{"old_name": "end_constraints",
-                           "new_name": "constraints"}],
-	"opt_constraints": null,
+ 	"opt_constraints": null,
   "enhanced_sampling": {"method": "NoseHooverMetaDynamics",
 					  					  "params": {"pushing_params": {"kappa": 0.03,
 					  					  															"k_i": 1.5,
@@ -84,8 +67,7 @@
 	"check_hess": false, 
 	"max_restart_opt": 1, 
 	"crest_dedupe": {"on": true,
-		               "params": {"crest_path": "$HOME/apps/crest-2.11.1",
-		             	            "xtb_dir": "$HOME/apps/xtb-6.4.1",
+		               "params": {"crest_path": "ext_programs/crest-2.11.1",
 		                          "ethr": 0.15,
 		                          "rthr": 0.175,
 		                          "bthr": 0.03,

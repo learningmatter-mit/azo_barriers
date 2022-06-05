@@ -1,24 +1,9 @@
 {
-  "gres": 1,
-  "nprocs": 4,
-  "maxcore": 1000,
-  "partitions": [
-    "sched_mit_rafagb",
-    "sched_mit_rafagb_amd"
-  ],
-  "compute_platform": "engaging",
-  "conda_module_load": null,
-  "gnu_parallel": "/home/gridsan/saxelrod/apps/parallel-20210822/bin/parallel",
-  "req_mem": true,
-  "scratch": null,
-  
-  "htvs": "/home/saxelrod/repo/htvs/master/htvs",
-  "nff": "/home/saxelrod/repo/nff/master/NeuralForceField",
-  "conda": "/home/saxelrod/anaconda3",
-  "exclusive": false,
+  "coords": null,
   "nnid": null,
   "weightpath": null,
-  "device": null,
+
+  "device": 0,
   "en_key": "energy_0",
   "model_kwargs": null,
 

@@ -592,7 +592,7 @@ def run_cre_check(confs,
                   rthr,
                   bthr,
                   ewin,
-                  xtb_dir,
+                  # xtb_dir,
                   crest_path):
 
     base_name = make_rand_string()
@@ -608,7 +608,7 @@ def run_cre_check(confs,
     write_confs_xyz(confs, path=confs_path)
     write_confs_xyz(confs[:1], path=conf_0_path)
 
-    set_xtb_env(xtb_dir)
+    # set_xtb_env(xtb_dir)
     command = ("%s %s -cregen %s -ethr %.6f -rthr %.6f -bthr %.6f -ewin %.6f -enso "
                "> cregen.out" % (crest_path, conf_0_path, confs_path, ethr, rthr,
                                  bthr, ewin))
@@ -661,7 +661,10 @@ def get_md_function(params):
 
 
 def parse_path(path):
-    path = path.replace("$HOME", os.environ["HOME"])
+    direc = os.path.dirname(os.path.realpath(__file__))
+    ext_dir = os.path.join(direc, "../../ext_programs")
+    path = (path.replace("$HOME", os.environ["HOME"])
+            .replace("ext_programs", ext_dir))
     return path
 
 
@@ -720,8 +723,8 @@ def dedupe(confs, params):
                           rthr=crest_params["rthr"],
                           bthr=crest_params["bthr"],
                           ewin=crest_params["ewin"],
-                          xtb_dir=parse_path(
-                              crest_params["xtb_dir"]),
+                          # xtb_dir=parse_path(
+                              # crest_params["xtb_dir"]),
                           crest_path=parse_path(crest_params["crest_path"]))
     ens = [conf.get_potential_energy().item() for conf in confs]
 

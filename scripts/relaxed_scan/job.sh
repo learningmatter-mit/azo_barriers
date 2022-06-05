@@ -2,7 +2,8 @@ source activate barriers
 
 # get the directory of this script
 direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+parallel=$direc/../../ext_programs/parallel
 
-# run the script
-python $direc/../../barriers/relaxed_scan/neural_relaxed_scan.py  --info_file job_info.json > neural_relaxed_scan.log
+# change to the number of jobs you want to run in parallel
+$parallel -j 4 < tasks.txt 
 

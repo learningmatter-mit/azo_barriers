@@ -1,20 +1,9 @@
 {
-	"compute_platform": "supercloud",
-    "nprocs": 12,
-    "maxcore": 1000,
-    "gres": 1,
-    "partitions": ["xeon-g6-volta"],
-    "exclusive": false,
-    "conda": null,
-    "conda_module_load": null,
-    "gnu_parallel": "/home/gridsan/saxelrod/apps/parallel-20210822/bin/parallel",
-    "req_mem": true,
-    "scratch": null,
-
+	"coords": null,
 	"nnid": null, 
-	"method_names": null,
 	"weightpath": null, 
-	"en_key": "energy",
+	"en_key": "energy_0",
+
 	"model_kwargs": null,
 	"device": 0, 
 	"cutoff": 5.0,
@@ -34,7 +23,7 @@
 
 
     "start_from": "reactant",
-    "start_from_template_smiles": null,
+    "start_from_template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
 	"end_constraints": {"hookean": {"atoms": {"idx": null,
 	    									  "template_smiles": null,
 					                          "targets": null,
