@@ -4,7 +4,6 @@ import argparse
 import json
 from tqdm import tqdm
 import time
-import torch
 
 from rdkit import Chem
 from rdkit.Chem.rdMolTransforms import (SetDihedralDeg, SetAngleDeg, SetBondLength,
@@ -543,5 +542,4 @@ def main():
 
 
 if __name__ == "__main__":
-    torch.set_num_threads(1)
     main()

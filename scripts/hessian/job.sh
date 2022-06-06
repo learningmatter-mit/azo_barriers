@@ -8,3 +8,6 @@ python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $dir
 
 # run the script
 python $direc/../../barriers/hessian/neural_hessian.py > neural_hessian.log
+
+# remove the ASE vib folder
+rm -r vib

@@ -155,12 +155,7 @@ def main():
 
     params = load_params(file=args.info_file)
 
-    try:
-        run_from_params(params)
-    except Exception as e:
-        print(e)
-        import pdb
-        pdb.post_mortem()
+    run_from_params(params)
 
 
 if __name__ == "__main__":

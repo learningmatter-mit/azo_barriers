@@ -1,33 +1,29 @@
 {
-  
-  "nnid": null,
-  "weightpath": null,
-  "coords": null,
-
-  "atoms_kwargs": {
-    "cutoff": 5.0,
-    "cutoff_skin": 2.0,
-    "nbr_update_period": 1,
-    "directed": true,
+    "nnid": null,
+    "weightpath": null,
+    "nxyz": null,
+    "atoms_kwargs": {
+        "cutoff": 5.0,
+        "cutoff_skin": 2.0,
+        "nbr_update_period": 1,
+        "directed": true,
+        "device": 0,
+        "requires_large_offsets": false
+    },
+    "calc_kwargs": {
+        "device": 0,
+        "en_key": "energy_0",
+        "properties": [
+            "energy",
+            "forces"
+        ],
+        "model_kwargs": null
+    },
     "device": 0,
-    "requires_large_offsets": false
-  },
-
-  "calc_kwargs": {
-    "device": 0,
-    "en_key": "energy_0",
-    "properties": [
-      "energy",
-      "forces"
-    ],
-    "model_kwargs": null
-  },
-
-  "device": 0,
-  "analytical_hessian": false,  
-  "temperature": 298.15,
-  "pressure": 101325,
-  "imag_cutoff": 0,
-  "rotor_cutoff": 50,
-  "iroot": 0
+    "analytical_hessian": false,
+    "temperature": 298.15,
+    "pressure": 101325,
+    "imag_cutoff": 0,
+    "rotor_cutoff": 50,
+    "iroot": 0
 }

@@ -16,8 +16,9 @@ COORDS_NAME = "coords.json"
 
 def get_modes(params):
 
-    atoms = get_atoms(coords=params["coords"],
-                      atoms_kwargs=params["atoms_kwargs"])
+    atoms = get_atoms(coords=params.get("coords"),
+                      atoms_kwargs=params["atoms_kwargs"],
+                      nxyz=params.get('nxyz'))
 
     calc_kwargs = get_calc_kwargs(params=params)
     nff = NeuralFF.from_file(**calc_kwargs)

@@ -9,4 +9,7 @@ python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $dir
 # run the script
 python $direc/../../barriers/triplet_crossing/neural_triplet_crossing.py > neural_triplet_crossing.log
 
+# remove the ASE vib folder
+rm -r vib
+
 

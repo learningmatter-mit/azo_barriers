@@ -752,7 +752,10 @@ def make_en_funcs(params, job_dir):
 def get_mode_info(params,
                   job_dir):
 
-    ts_nxyz = coords_to_nxyz(params['coords'])
+    if 'nxyz' in params:
+        ts_nxyz = np.array(params['nxyz'])
+    else:
+        ts_nxyz = coords_to_nxyz(params['coords'])
 
     singlet_params = params['singlet_params']
     model_path = get_model_path(singlet_params)
@@ -900,8 +903,23 @@ def run_all(params, job_dir):
     return summary
 
 
+def load_and_modify(info_path):
+    info = load_info(info_path)
+    model_keys = ["en_key", "model_kwargs", "nnid",
+                  "weightpath", "cutoff"]
+
+    singlet_params = {}
+
+    for key in model_keys:
+        singlet_params[key] = info.get(key)
+
+    info['singlet_params'] = singlet_params
+
+    return info
+
+
 def main(job_dir, info_path):
-    params = load_info(info_path)
+    params = load_and_modify(info_path)
     summary = run_all(params, job_dir)
     save_path = os.path.join(job_dir, 'triplet_opt.pickle')
     with open(save_path, 'wb') as f:
