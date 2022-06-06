@@ -16,7 +16,6 @@ setup(
     email="simonaxelrod83@gmail.com",
     url="https://github.com/learningmatter-mit/azo_barriers",
     packages=find_packages("."),
-    scripts=["scripts/get_barriers.py"],
     license="MIT",
     description="Package for computing thermal barriers of azobenzene derivatives",
     long_description=read("README.md"),
