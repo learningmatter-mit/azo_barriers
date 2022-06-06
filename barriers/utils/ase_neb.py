@@ -507,7 +507,8 @@ def load_defaults():
 
 
 def load_params(file):
-    info = load_defaults()
+    # info = load_defaults()
+    info = {}
     with open(file, 'r') as f:
         new_info = json.load(f)
     info.update(new_info)

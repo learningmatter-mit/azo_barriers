@@ -28,8 +28,15 @@ DEFAULT_THERMO_KWARGS = {"flip_all_but_ts": True,
 
 
 def get_atoms(coords,
-              atoms_kwargs):
-    nxyz = coords_to_xyz(coords=coords).astype('float')
+              atoms_kwargs,
+              nxyz=None):
+    if nxyz is None and coords is not None:
+        nxyz = coords_to_xyz(coords=coords).astype('float')
+    elif nxyz is not None:
+        nxyz = np.array(nxyz)
+    else:
+        msg = "Must specify either nxyz or coords"
+        raise Exception(msg)
 
     trimmed_kwargs = {key: val for key, val in atoms_kwargs.items()
                       if key != 'nbr_update_period'}
@@ -126,8 +133,9 @@ def run_from_params(params):
     thermo_kwargs = params.get("thermo_kwargs",
                                DEFAULT_THERMO_KWARGS)
 
-    atoms = get_atoms(coords=params["coords"],
-                      atoms_kwargs=atoms_kwargs)
+    atoms = get_atoms(coords=params.get("coords"),
+                      atoms_kwargs=atoms_kwargs,
+                      nxyz=params.get("nxyz"))
 
     output = run_from_atoms(atoms=atoms,
                             calc_kwargs=calc_kwargs,
@@ -145,7 +153,7 @@ def main():
                         default='job_info.json')
     args = parser.parse_args()
 
-    params = load_params(file=args.config_file)
+    params = load_params(file=args.info_file)
 
     try:
         run_from_params(params)

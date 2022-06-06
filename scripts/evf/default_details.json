@@ -1,35 +1,34 @@
 {
-
-  "nnid": null,
-  "weightpath": null,
-  "coords": null,
-
-  "device": 0,
-  "ev_kwargs": {
-    "maxstepsize": 0.15,
-    "maxstep": 1000,
-    "convergence": 0.03,
-    "method": "Powell"
-  },
-
-  "atoms_kwargs": {
-    "cutoff": 5.0,
-    "cutoff_skin": 2.0,
-    "nbr_update_period": 1,
-    "directed": true,
+    "nnid": null,
+    "weightpath": null,
+    "nxyz": null,
     "device": 0,
-    "requires_large_offsets": false
-  },
-  "calc_kwargs": {
-    "device": 0,
-    "en_key": "energy",
-    "properties": [
-      "energy",
-      "forces"
-    ],
-    "model_kwargs": null
-  },
-  "thermo_kwargs": {"flip_all_but_ts": true,
-                    "imag_cutoff": 0},
-  "cutoff_to_be_ts": -200
+    "ev_kwargs": {
+        "maxstepsize": 0.15,
+        "maxstep": 1000,
+        "convergence": 0.005,
+        "method": "Powell"
+    },
+    "atoms_kwargs": {
+        "cutoff": 5.0,
+        "cutoff_skin": 2.0,
+        "nbr_update_period": 1,
+        "directed": true,
+        "device": 0,
+        "requires_large_offsets": false
+    },
+    "calc_kwargs": {
+        "device": 0,
+        "en_key": "energy_0",
+        "properties": [
+            "energy",
+            "forces"
+        ],
+        "model_kwargs": null
+    },
+    "thermo_kwargs": {
+        "flip_all_but_ts": true,
+        "imag_cutoff": 0
+    },
+    "cutoff_to_be_ts": -200
 }

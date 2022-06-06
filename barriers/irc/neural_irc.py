@@ -1000,8 +1000,9 @@ def main(ts_nxyz,
 def load_info(info_path):
     with open(info_path, 'r') as f:
         info = json.load(f)
-    info = {**info, **info['details']}
-    info.pop('details')
+    if 'details' in info:
+        info.update(info['details'])
+        info.pop('details')
 
     return info
 
@@ -1080,7 +1081,11 @@ def neural_from_file(job_dir,
     # load some info needed for the main function
 
     info = load_info(info_path)
-    ts_nxyz = coords_to_nxyz(info['coords'])
+    if 'nxyz' in info:
+        ts_nxyz = np.array(info['nxyz'])
+    else:
+        ts_nxyz = coords_to_nxyz(coords=info['coords'])
+
     model_path = get_model_path(info)
 
     # do a Hessian calculation
