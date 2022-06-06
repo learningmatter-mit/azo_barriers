@@ -1,0 +1,22 @@
+{
+    "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F": {
+        "totalconfs": 25,
+        "uniqueconfs": 25,
+        "temperature": 298.15,
+        "lowestenergy": 0.2744302909687072,
+        "poplowestpct": 56.79864122678997,
+        "charge": 0,
+        "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/scripts/rdkit_confgen/test/results/SLNIZFKCXJHOIU-NVQSTNCTSA-N.pickle"
+    },
+    "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N\\c2ccccc2)c1)C(F)(F)F": {
+        "totalconfs": 12,
+        "uniqueconfs": 12,
+        "temperature": 298.15,
+        "lowestenergy": 0.28339381173867273,
+        "poplowestpct": 81.94472710575825,
+        "charge": 0,
+        "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N\\c2ccccc2)c1)C(F)(F)F",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/scripts/rdkit_confgen/test/results/SLNIZFKCXJHOIU-KTMFPKCZSA-N.pickle"
+    }
+}

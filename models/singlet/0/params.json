@@ -1,0 +1,173 @@
+{
+    "lr": 0.0001,
+    "seed": 0,
+    "device": 0,
+    "lr_min": 1e-05,
+    "nprocs": 10,
+    "metrics": [
+        "MeanAbsoluteError"
+    ],
+    "add_nacv": false,
+    "lr_decay": 0.5,
+    "max_time": 30240,
+    "torch_par": false,
+    "use_slurm": true,
+    "batch_size": 20,
+    "max_epochs": 5000,
+    "partitions": [
+        "normal"
+    ],
+    "weightpath": "/home/gridsan/saxelrod/models/switches",
+    "dset_params": {
+        "lr": 0.0001,
+        "charge": [
+            -5,
+            -4,
+            -3,
+            -2,
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "lr_min": 5e-06,
+        "molsets": null,
+        "pruning": {
+            "substruc_smiles": [
+                [
+                    "N(=N/c1ccccc1)\\c2ccccc2"
+                ]
+            ],
+            "stereo_in_substruc": false
+        },
+        "geomsets": [
+            "barriers_tl"
+        ],
+        "max_geoms": null,
+        "splitting": {
+            "seed": 0,
+            "split_sizes": {
+                "val": 500,
+                "test": 500
+            },
+            "num_parallel": 1,
+            "species_splits": {}
+        },
+        "max_std_en": 10,
+        "max_val_en": 900,
+        "needs_nbrs": false,
+        "split_type": "random",
+        "weightpath": "/home/gridsan/saxelrod/models/switches",
+        "dset_version": 2,
+        "method_names": [
+            "sf_tddft_bhhlyp_d3bj_water"
+        ],
+        "needs_angles": false,
+        "max_std_force": 10000000000.0,
+        "max_val_force": 450,
+        "required_keys": [
+            "energy_0_grad",
+            "formula",
+            "geom_id",
+            "nxyz",
+            "energy_0",
+            "charge",
+            "spin",
+            "spin_sq_0"
+        ],
+        "job_chunk_size": 1000,
+        "spin_sq_cutoff": 1.0,
+        "stoich_job_dir": "/home/saxelrod/htvs/djangochem/neuralnet/utils/dataset/json_files",
+        "dataset_on_build": false,
+        "all_calcs_for_geom": false,
+        "custom_stoich_name": "lin_reg",
+        "max_geoms_per_dset": null,
+        "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+        "method_descriptions": [
+            "QChem bhhlyp-D3BJ/6-31gs SF-TDDFT PCM"
+        ],
+        "stoich_only_neutral": false,
+        "stoich_query_from_config": true,
+        "stoich_from_config_needs_converged": false
+    },
+    "lr_patience": 50,
+    "only_ground": false,
+    "mini_batches": 1,
+    "mol_loss_norm": false,
+    "reset_trainer": false,
+    "multi_loss_dict": {
+        "mae": [
+            {
+                "coef": 0.2,
+                "params": {
+                    "key": "energy_0"
+                }
+            },
+            {
+                "coef": 1,
+                "params": {
+                    "key": "energy_0_grad"
+                }
+            }
+        ]
+    },
+    "compute_platform": "supercloud",
+    "dataset_on_build": true,
+    "del_grad_interval": 100,
+    "log_every_n_epochs": 1,
+    "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+    "checkpoints_to_keep": 1000,
+    "n_rbf": 20,
+    "cutoff": 5.0,
+    "feat_dim": 128,
+    "num_conv": 5,
+    "pool_dic": {
+        "energy_0": {
+            "name": "sum",
+            "param": {}
+        }
+    },
+    "disp_type": "d3bj",
+    "grad_keys": [
+        "energy_0_grad"
+    ],
+    "activation": "swish",
+    "functional": "bhhlyp",
+    "model_type": "PainnDispersion",
+    "needs_nbrs": true,
+    "learnable_k": true,
+    "output_keys": [
+        "energy_0"
+    ],
+    "conv_dropout": 0.0,
+    "needs_angles": false,
+    "compute_delta": false,
+    "readout_dropout": 0.0,
+    "skip_connection": {
+        "energy_0": false
+    },
+    "gres": 1,
+    "mode": "train",
+    "model": "schnet",
+    "nodes": [
+        "node1034",
+        "node1035"
+    ],
+    "split": [
+        0.2,
+        0.2
+    ],
+    "logger": "csv",
+    "nnodes": 1,
+    "workers": 2,
+    "n_epochs": 500,
+    "loss_coef": "{\"energy\": 0.01, \"energy_grad\": 1}",
+    "n_filters": 256,
+    "git_commit": "",
+    "n_gaussians": 32,
+    "n_atom_basis": 256,
+    "n_convolutions": 4,
+    "trainable_gauss": true
+}

@@ -1,48 +1,49 @@
 {
-	"coords": null,
-	"nnid": null, 
-	"weightpath": null, 
-	"en_key": "energy_0",
-
-	"model_kwargs": null,
-	"device": 0, 
-	"cutoff": 5.0,
-	"cutoff_skin": 2.0,
-	"nbr_list_update_freq": 10, 
-	"directed": true,
-	"requires_large_offsets": false,
-
+    "nxyz": null,
+    "smiles": null,
+    "nnid": null,
+    "weightpath": null,
+    "en_key": "energy_0",
+    "model_kwargs": null,
+    "device": 0,
+    "cutoff": 5.0,
+    "cutoff_skin": 2.0,
+    "nbr_list_update_freq": 10,
+    "directed": true,
+    "requires_large_offsets": false,
     "opt_config": "neuraloptimizer",
     "opt_max_step": 500,
     "fmax": 0.05,
     "fmax_tight": 0.015,
     "num_steps": 20,
-    "smiles": null,
     "opt_type": "BFGS",
     "use_rdkit": false,
-
-
-    "start_from": "reactant",
-    "start_from_template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-	"end_constraints": {"hookean": {"atoms": {"idx": null,
-	    									  "template_smiles": null,
-					                          "targets": null,
-					                          "force_consts": 2242.34},
-
-									"bonds": {"idx": null,
-	    									  "template_smiles": null,
-								              "targets": null,
-								              "force_consts": 2242.34},
-
-									"angles": {"idx": null,
-	    									   "template_smiles": null,
-									           "targets": null,
-									           "force_consts": 627.5},   
-
-									"dihedrals": {"idx": null,
-	    									      "template_smiles": null,
-									              "targets": null,
-									              "force_consts": 627.5}
-	                    }
-    }    
+    "end_constraints": {
+        "hookean": {
+            "atoms": {
+                "idx": null,
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": null,
+                "force_consts": 2242.34
+            },
+            "bonds": {
+                "idx": null,
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": null,
+                "force_consts": 2242.34
+            },
+            "angles": {
+                "idx": null,
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": null,
+                "force_consts": 627.5
+            },
+            "dihedrals": {
+                "idx": null,
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": null,
+                "force_consts": 627.5
+            }
+        }
+    }
 }

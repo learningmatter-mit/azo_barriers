@@ -2,8 +2,11 @@ source activate barriers
 
 # get the directory of this script
 direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
-parallel=$direc/../../ext_programs/parallel
 
-# change to the number of jobs you want to run in parallel
-$parallel -j 4 < tasks.txt 
+# render the info file using `default_details.json`, updated with whatever is in `job_info.json`
+python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
+
+# run the script
+python $direc/../../barriers/triplet_crossing/neural_triplet_crossing.py --info_file job_info.json > neural_triplet_crossing.log
+
 

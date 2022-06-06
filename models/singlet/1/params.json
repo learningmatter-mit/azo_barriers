@@ -1,0 +1,402 @@
+{
+    "activation": "swish",
+    "add_nacv": false,
+    "batch_size": 20,
+    "checkpoints_to_keep": 1000,
+    "compute_delta": false,
+    "compute_platform": "supercloud",
+    "conv_dropout": 0.0,
+    "cutoff": 5.0,
+    "dataset_on_build": true,
+    "del_grad_interval": 100,
+    "details": {
+        "activation": "swish",
+        "add_nacv": false,
+        "batch_size": 20,
+        "checkpoints_to_keep": 1000,
+        "compute_delta": false,
+        "compute_platform": "supercloud",
+        "conv_dropout": 0.0,
+        "cutoff": 5.0,
+        "dataset_on_build": true,
+        "del_grad_interval": 100,
+        "device": 0,
+        "dset_params": {
+            "all_calcs_for_geom": false,
+            "charge": [
+                -5,
+                -4,
+                -3,
+                -2,
+                -1,
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "custom_stoich_name": "lin_reg",
+            "dataset_on_build": true,
+            "dset_version": 2,
+            "geomsets": [
+                "barriers_tl"
+            ],
+            "job_chunk_size": 1000,
+            "lr": 0.0001,
+            "lr_min": 5e-06,
+            "max_geoms": null,
+            "max_geoms_per_dset": null,
+            "max_std_en": 10,
+            "max_std_force": 10000000000.0,
+            "max_val_en": 900,
+            "max_val_force": 450,
+            "method_descriptions": [
+                "QChem bhhlyp/6-31gs SF-TDDFT PCM"
+            ],
+            "method_names": [
+                "sf_tddft_bhhlyp_water"
+            ],
+            "molsets": null,
+            "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+            "needs_angles": false,
+            "needs_nbrs": false,
+            "pruning": {
+                "stereo_in_substruc": false,
+                "substruc_smiles": [
+                    [
+                        "N(=N/c1ccccc1)\\c2ccccc2"
+                    ]
+                ]
+            },
+            "required_keys": [
+                "energy_0_grad",
+                "formula",
+                "geom_id",
+                "nxyz",
+                "energy_0",
+                "charge",
+                "spin",
+                "spin_sq_0"
+            ],
+            "spin_sq_cutoff": 1.0,
+            "split_type": "random",
+            "splitting": {
+                "num_parallel": 1,
+                "seed": 1,
+                "species_splits": {},
+                "split_sizes": {
+                    "test": 500,
+                    "val": 500
+                }
+            },
+            "stoich_from_config_needs_converged": false,
+            "stoich_job_dir": "/home/saxelrod/htvs/djangochem/neuralnet/utils/dataset/json_files",
+            "stoich_only_neutral": false,
+            "stoich_query_from_config": true,
+            "weightpath": "/home/gridsan/saxelrod/models/switches"
+        },
+        "feat_dim": 128,
+        "git_commit": "",
+        "grad_keys": [
+            "energy_0_grad"
+        ],
+        "gres": 1,
+        "learnable_k": true,
+        "log_every_n_epochs": 1,
+        "logger": "csv",
+        "loss_coef": "{\"energy\": 0.01, \"energy_grad\": 1}",
+        "lr": 0.0001,
+        "lr_decay": 0.5,
+        "lr_min": 5e-06,
+        "lr_patience": 50,
+        "max_epochs": 5000,
+        "max_time": 30240,
+        "metrics": [
+            "MeanAbsoluteError"
+        ],
+        "mini_batches": 1,
+        "mode": "train",
+        "model": "schnet",
+        "model_type": "Painn",
+        "mol_loss_norm": false,
+        "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+        "multi_loss_dict": {
+            "mae": [
+                {
+                    "coef": 0.2,
+                    "params": {
+                        "key": "energy_0"
+                    }
+                },
+                {
+                    "coef": 1,
+                    "params": {
+                        "key": "energy_0_grad"
+                    }
+                }
+            ]
+        },
+        "n_atom_basis": 256,
+        "n_convolutions": 4,
+        "n_epochs": 500,
+        "n_filters": 256,
+        "n_gaussians": 32,
+        "n_rbf": 20,
+        "needs_angles": false,
+        "needs_nbrs": true,
+        "nnodes": 1,
+        "nodes": [
+            "node1034",
+            "node1035"
+        ],
+        "nprocs": 10,
+        "num_conv": 5,
+        "only_ground": false,
+        "output_keys": [
+            "energy_0"
+        ],
+        "partitions": [
+            "normal"
+        ],
+        "pool_dic": {
+            "d_00": {
+                "name": "sum",
+                "param": {}
+            },
+            "d_01": {
+                "name": "sum",
+                "param": {}
+            },
+            "d_02": {
+                "name": "sum",
+                "param": {}
+            },
+            "d_11": {
+                "name": "sum",
+                "param": {}
+            },
+            "d_12": {
+                "name": "sum",
+                "param": {}
+            },
+            "d_22": {
+                "name": "sum",
+                "param": {}
+            }
+        },
+        "readout_dropout": 0.0,
+        "reset_trainer": false,
+        "seed": 1,
+        "skip_connection": {
+            "d_00": false,
+            "d_01": false,
+            "d_02": false,
+            "d_11": false,
+            "d_12": false,
+            "d_22": false
+        },
+        "split": [
+            0.2,
+            0.2
+        ],
+        "torch_par": false,
+        "trainable_gauss": true,
+        "use_slurm": true,
+        "weightpath": "/home/gridsan/saxelrod/models/switches",
+        "workers": 2
+    },
+    "device": 0,
+    "dset_params": {
+        "all_calcs_for_geom": false,
+        "charge": [
+            -5,
+            -4,
+            -3,
+            -2,
+            -1,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "custom_stoich_name": "lin_reg",
+        "dataset_on_build": true,
+        "dset_version": 2,
+        "geomsets": [
+            "barriers_tl"
+        ],
+        "job_chunk_size": 1000,
+        "lr": 0.0001,
+        "lr_min": 5e-06,
+        "max_geoms": null,
+        "max_geoms_per_dset": null,
+        "max_std_en": 10,
+        "max_std_force": 10000000000.0,
+        "max_val_en": 900,
+        "max_val_force": 450,
+        "method_descriptions": [
+            "QChem bhhlyp/6-31gs SF-TDDFT PCM"
+        ],
+        "method_names": [
+            "sf_tddft_bhhlyp_water"
+        ],
+        "molsets": null,
+        "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+        "needs_angles": false,
+        "needs_nbrs": false,
+        "pruning": {
+            "stereo_in_substruc": false,
+            "substruc_smiles": [
+                [
+                    "N(=N/c1ccccc1)\\c2ccccc2"
+                ]
+            ]
+        },
+        "required_keys": [
+            "energy_0_grad",
+            "formula",
+            "geom_id",
+            "nxyz",
+            "energy_0",
+            "charge",
+            "spin",
+            "spin_sq_0"
+        ],
+        "spin_sq_cutoff": 1.0,
+        "split_type": "random",
+        "splitting": {
+            "num_parallel": 1,
+            "seed": 1,
+            "species_splits": {},
+            "split_sizes": {
+                "test": 500,
+                "val": 500
+            }
+        },
+        "stoich_from_config_needs_converged": false,
+        "stoich_job_dir": "/home/saxelrod/htvs/djangochem/neuralnet/utils/dataset/json_files",
+        "stoich_only_neutral": false,
+        "stoich_query_from_config": true,
+        "weightpath": "/home/gridsan/saxelrod/models/switches"
+    },
+    "family": "fam_1",
+    "feat_dim": 128,
+    "git_commit": "",
+    "grad_keys": [
+        "energy_0_grad"
+    ],
+    "gres": 1,
+    "job_key": 69481875,
+    "learnable_k": true,
+    "log_every_n_epochs": 1,
+    "logger": "csv",
+    "loss_coef": "{\"energy\": 0.01, \"energy_grad\": 1}",
+    "lr": 0.0001,
+    "lr_decay": 0.5,
+    "lr_min": 5e-06,
+    "lr_patience": 50,
+    "max_epochs": 5000,
+    "max_time": 30240,
+    "metrics": [
+        "MeanAbsoluteError"
+    ],
+    "mini_batches": 1,
+    "mode": "train",
+    "model": "schnet",
+    "model_type": "Painn",
+    "mol_loss_norm": false,
+    "mounted_weightpath": "/home/saxelrod/supercloud/models/switches",
+    "multi_loss_dict": {
+        "mae": [
+            {
+                "coef": 0.2,
+                "params": {
+                    "key": "energy_0"
+                }
+            },
+            {
+                "coef": 1,
+                "params": {
+                    "key": "energy_0_grad"
+                }
+            }
+        ]
+    },
+    "n_atom_basis": 256,
+    "n_convolutions": 4,
+    "n_epochs": 500,
+    "n_filters": 256,
+    "n_gaussians": 32,
+    "n_rbf": 20,
+    "needs_angles": false,
+    "needs_nbrs": true,
+    "nnid": "final_tl_water_2",
+    "nnodes": 1,
+    "nodes": [
+        "node1034",
+        "node1035"
+    ],
+    "nprocs": 10,
+    "num_conv": 5,
+    "num_parallel": 1,
+    "only_ground": false,
+    "output_keys": [
+        "energy_0"
+    ],
+    "parent_class": "NnPotential",
+    "partitions": [
+        "normal"
+    ],
+    "pool_dic": {
+        "d_00": {
+            "name": "sum",
+            "param": {}
+        },
+        "d_01": {
+            "name": "sum",
+            "param": {}
+        },
+        "d_02": {
+            "name": "sum",
+            "param": {}
+        },
+        "d_11": {
+            "name": "sum",
+            "param": {}
+        },
+        "d_12": {
+            "name": "sum",
+            "param": {}
+        },
+        "d_22": {
+            "name": "sum",
+            "param": {}
+        }
+    },
+    "priority": 0,
+    "project_name": "switches",
+    "readout_dropout": 0.0,
+    "reset_trainer": false,
+    "seed": 1,
+    "skip_connection": {
+        "d_00": false,
+        "d_01": false,
+        "d_02": false,
+        "d_11": false,
+        "d_12": false,
+        "d_22": false
+    },
+    "split": [
+        0.2,
+        0.2
+    ],
+    "torch_par": false,
+    "trainable_gauss": true,
+    "transferfrom": "gas_phase_pretrain_2",
+    "use_slurm": true,
+    "uuid": "aeaaca12-a882-4e8f-9ce3-ae36f89a733e",
+    "weightpath": "/home/gridsan/saxelrod/models/switches",
+    "worker_name": "trainpotential",
+    "workers": 2
+}
