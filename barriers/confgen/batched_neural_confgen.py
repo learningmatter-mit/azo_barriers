@@ -49,7 +49,8 @@ from barriers.confgen.neural_confgen import (update_params,
                                              move_general_file,
                                              FINAL_OPT_FILENAME,
                                              summarize_final,
-                                             time_to_msg)
+                                             time_to_msg,
+                                             set_mtd_time)
 
 PERIODICTABLE = Chem.GetPeriodicTable()
 
@@ -1899,6 +1900,16 @@ def init_is_done_list(params_list):
             is_done_list.append(params['mol_index'])
     return is_done_list
 
+def set_mtd_times(base_dir):
+    for i in os.listdir(base_dir):
+        path = os.path.join(base_dir, i, 'job_info.json')
+        if not os.path.isfile(path):
+            continue
+
+        with open(path, 'r') as f:
+            params = json.load(f)
+        set_mtd_time(info_file=path,
+                 params=params)
 
 def main(base_dir):
 
@@ -2005,4 +2016,5 @@ def main(base_dir):
 
 
 if __name__ == "__main__":
+    set_mtd_times(base_dir='.')
     main(base_dir='.')

@@ -8,6 +8,7 @@ arguments.
 """
 
 from rdkit.Chem import BondType
+from rdkit import Chem
 import copy
 import numpy as np
 import os
@@ -37,7 +38,7 @@ from barriers.utils.neuraloptimizer import (md_to_conf,
 from barriers.utils.neuraloptimizer import confs_to_opt as base_opt
 
 FINAL_OPT_FILENAME = "final_opt.traj"
-ARGS_PATH = 'json_files/neural_confgen.json'
+ARGS_PATH = 'json_files/args.json'
 JSON_KEYS = ['model_kwargs',
              'constraints',
              'enhanced_sampling',
@@ -593,7 +594,7 @@ def run_cre_check(confs,
                   bthr,
                   ewin):
 
-    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'crest')
+    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'bin/crest')
     base_name = make_rand_string()
     job_dir = os.path.join("/tmp", base_name)
 
@@ -617,7 +618,7 @@ def run_cre_check(confs,
 
     unique_idx = read_unique(job_dir=job_dir)
     if unique_idx is None:
-        return confs, 0
+        return confs
 
     num_removed = len(confs) - len(unique_idx)
 
@@ -882,6 +883,44 @@ def make_confs(params,
                 end=end)
 
 
+def get_num_fixed(params):
+    fixed_idx = []
+
+    dics = [params.get("fixed_atoms", {})]
+    dics += [params.get("hookean", {}).get(key, {})
+             for key in ['bonds', 'angles', 'dihedrals']]
+    for dic in dics:
+        idx = dic.get("idx")
+        if idx is not None:
+            fixed_idx += idx
+
+    fixed_idx = list(set(fixed_idx))
+    num_fixed = len(fixed_idx)
+
+    return num_fixed
+
+
+def set_mtd_time(info_file,
+                 params):
+
+    if not params.get("infer_time_from_flex", True):
+        return
+
+    smiles = params['smiles']
+
+    mol = Chem.MolFromSmiles(smiles)
+    mol = Chem.AddHs(mol)
+    num_fixed = get_num_fixed(params)
+    mtd_time = get_t_mtd(mol=mol,
+                         num_fixed=num_fixed)
+    params['mtd_time'] = mtd_time
+    params["steps"] = int(np.ceil(params["mtd_time"] * 1000 /
+                                  params["time_step"]))
+
+    with open(info_file, 'w') as f:
+        json.dump(params, f, indent=4)
+
+
 def run(params):
     update_params(params)
     make_confs(params=params)
@@ -893,13 +932,15 @@ def parse():
                       direc=direc)
 
     params = args.__dict__
-
     info_file = args.info_file
     if info_file is not None:
         if not os.path.isfile(info_file):
             raise Exception(("Can't find the requested info "
                              "file %s" % info_file))
-        params.update(get_params(info_file=args.info_file))
+        these_params = get_params(info_file=args.info_file)
+        set_mtd_time(info_file=info_file,
+                     params=these_params)
+        params.update(these_params)
 
     # if anything is supposed to be a dictionary and was given as a string
     # on the command line, convert now

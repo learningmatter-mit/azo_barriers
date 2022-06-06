@@ -1,75 +1,95 @@
 {
-	
-	"nnid": null, 
-	"weightpath": null, 
-  "smiles": null,
-  "coords": null,
-
-	"en_key": "energy_0",
-	"model_kwargs": null,
-	"device": 0, 
-	"cutoff": 5.0,
-	"cutoff_skin": 2.0,
-	"nbr_list_update_freq": 10, 
-	"directed": true,
-	"requires_large_offsets": false,
-
-  "md_type": "NoseHooverMetaDynamics",
-  "geom_add_time": 1000,
-  "mtd_time": null,
-  "infer_time_from_flex": true, 
-	"time_step": 2.0, 
-	"temperature": 298.15, 
-	"ttime": 50, 
-	"maxwell_temp": null, 
-	"loginterval": 10, 
-
-	"fixed_atoms": {"idx": [3, 4, 5, 6], "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"},
-	"constraints": {"hookean": {"bonds": {"idx": null,
-									      			"template_smiles": null,
-							            	  "targets": null,
-							            	  "force_consts": 2242.34},
-
-									"angles": {"idx": null,
-										       	"template_smiles": null,
-									           "targets": null,
-									           "force_consts": 627.5},   
-
-									"dihedrals": {"idx": null,
-										          	"template_smiles": null,
-									              "targets": null,
-									              "force_consts": 627.5}
-	                }
-  },   
- 	"opt_constraints": null,
-  "enhanced_sampling": {"method": "NoseHooverMetaDynamics",
-					  					  "params": {"pushing_params": {"kappa": 0.03,
-					  					  															"k_i": 1.5,
-									              					  					"alpha_i": 0.5,
-									              					  					"bias_type": "rmsd",
-									              					  				  "max_ref_structures": 100000}},
-					      				"shake": false
-  },
-  "exclude_from_rmsd": {"template_smiles": null,
-                        "idx": null},
-	"sample_rate_fs": 100,
-	"lower_e_tol": 0.2,
-	"max_md_runs": 5,
-	"min_md_runs": 2,
-	"fmax_coarse": 0.2, 
-	"fmax_tight": 0.05,
-	"fmax_vtight": 0.01,
-	"window_coarse": 15.0,
-	"window_tight": 8.0,
-	"window_vtight": 2.5,
-	"opt_type": "LBFGS",
-	"opt_max_step": 1500, 
-	"check_hess": false, 
-	"max_restart_opt": 1, 
-	"crest_dedupe": {"on": true,
-		               "params": {"crest_path": "ext_programs/crest-2.11.1",
-		                          "ethr": 0.15,
-		                          "rthr": 0.175,
-		                          "bthr": 0.03,
-		                          "ewin": 10000}}
+    "nnid": null,
+    "weightpath": null,
+    "smiles": null,
+    "nxyz": null,
+    "en_key": "energy_0",
+    "model_kwargs": null,
+    "device": 0,
+    "cutoff": 5.0,
+    "cutoff_skin": 2.0,
+    "nbr_list_update_freq": 10,
+    "directed": true,
+    "requires_large_offsets": false,
+    "md_type": "NoseHooverMetaDynamics",
+    "geom_add_time": 1000,
+    "mtd_time": null,
+    "infer_time_from_flex": true,
+    "time_step": 2.0,
+    "temperature": 298.15,
+    "ttime": 50,
+    "maxwell_temp": null,
+    "loginterval": 10,
+    "fixed_atoms": {
+        "idx": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"
+    },
+    "constraints": {
+        "hookean": {
+            "bonds": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 2242.34
+            },
+            "angles": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 627.5
+            },
+            "dihedrals": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 627.5
+            }
+        }
+    },
+    "opt_constraints": null,
+    "enhanced_sampling": {
+        "method": "NoseHooverMetaDynamics",
+        "params": {
+            "pushing_params": {
+                "kappa": 0.03,
+                "k_i": 1.5,
+                "alpha_i": 0.5,
+                "bias_type": "rmsd",
+                "max_ref_structures": 100000
+            }
+        },
+        "shake": false
+    },
+    "exclude_from_rmsd": {
+        "template_smiles": null,
+        "idx": null
+    },
+    "sample_rate_fs": 100,
+    "lower_e_tol": 0.2,
+    "max_md_runs": 5,
+    "min_md_runs": 2,
+    "fmax_coarse": 0.2,
+    "fmax_tight": 0.05,
+    "fmax_vtight": 0.01,
+    "window_coarse": 15.0,
+    "window_tight": 8.0,
+    "window_vtight": 2.5,
+    "opt_type": "LBFGS",
+    "opt_max_step": 1500,
+    "check_hess": false,
+    "max_restart_opt": 1,
+    "crest_dedupe": {
+        "on": true,
+        "params": {
+            "ethr": 0.15,
+            "rthr": 0.175,
+            "bthr": 0.03,
+            "ewin": 10000
+        }
+    }
 }

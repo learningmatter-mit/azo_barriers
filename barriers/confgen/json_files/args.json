@@ -1,0 +1,235 @@
+{
+    "nnid": {
+        "type": "str",
+        "help": "Neural network ID. The directory `weightpath`/`nnid` is used to load the model. ",
+        "required": true
+    },
+    "weightpath": {
+        "type": "str",
+        "help": "Base model directory. The directory `weightpath`/`nnid` is used to load the model.  ",
+        "required": true
+    },
+    "coords": {
+        "type": "str",
+        "help": "Coordinates of the initial structure. It is a list dictionaries, of the form [{\"element\": \"C\", \"x\": 0.1, \"y\": 0.3, \"z\": -0.1}, ...]. Note that if this dictionary is supplied in the command line, it should be given as a JSON string, and if it is supplied in a JSON file then it should be given as a list of dictionaries. ",
+        "required": true
+    },
+    "en_key": {
+        "type": "str",
+        "help": "Name of the energy outputted by the model that you want to minimize.",
+        "required": false,
+        "default": "energy"
+    },
+    "model_kwargs": {
+        "type": "str",
+        "help": "Any keyword arguments you want to supply when calling the model. I.e. replace `model(batch)` with `model(batch, **model_kwargs)`.",
+        "required": false
+    },
+    "device": {
+        "type": "str",
+        "help": "Device to run the calculations on. Can be 'cpu' or an integer from 0 to (number of GPUs available - 1) to run on a GPU.",
+        "required": false,
+        "default": "0"
+    },
+    "cutoff": {
+        "type": "float",
+        "help": "Message-passing cutoff in the model, in Angstrom. Must be the same as the number used in training.",
+        "required": false,
+        "default": 5.0
+    },
+    "cutoff_skin": {
+        "type": "float",
+        "help": "Extra distance added to `cutoff` when computing neighbor list. Used so that, if the neighbor list is only updated every X steps, then atoms that enter into the cutoff radius between updates will not be missed.",
+        "required": false,
+        "default": 2.0
+    },
+    "nbr_list_update_freq": {
+        "type": "int",
+        "help": "Number of steps between neighbor list updates during either MD or optimization. ",
+        "required": false,
+        "default": 10
+    },
+    "directed": {
+        "type": "bool",
+        "help": "Whether or not to use a directed neighbor list with the model. Should be the same as what was used during training. Essentially all models other than SchNet require a directed neighbor list.",
+        "required": false,
+        "default": true
+    },
+    "requires_large_offsets": {
+        "type": "bool",
+        "help": "Whether to use large offsets when dealing with periodic boundary conditions.",
+        "required": false,
+        "default": false
+    },
+    "md_type": {
+        "type": "str",
+        "help": "What type of MD to run for generating samples to turn into conformers.",
+        "choices": ["NoseHoover", "nve"],
+        "required": false,
+        "default": "NoseHoover"
+    },
+    "time_step": {
+        "type": "float",
+        "help": "MD time step in fs.",
+        "required": false,
+        "default": 0.5
+    },
+    "steps": {
+        "type": "int",
+        "help": "Number of MD steps to run in each round of MD. Total time in fs is `steps` * `time_step`. If using GAMD for enhanced sampling, this number refers to the number of GAMD steps, while the number of reuglar MD steps is specified in the `enhanced_sampling` dictionary (see below).",
+        "required": false,
+        "default": 20000
+    },
+    "temperature": {
+        "type": "float",
+        "help": "Temperature for running MD, in Kelvin.",
+        "required": false,
+        "default": 500
+    },
+    "ttime": {
+        "type": "float",
+        "help": "Bath relaxation time = `time_step` * `ttime` in Nose-Hoover.",
+        "required": false,
+        "default": 50
+    },
+    "maxwell_temp": {
+        "type": "float",
+        "help": "If specified, the temperature for generating initial atom velocities will be set to `maxwell_temp`. Otherwise it defaults to twice the MD temperature.",
+        "required": false
+    },
+    "loginterval": {
+        "type": "int",
+        "help": "Save MD frames and log their information every `loginterval` steps.",
+        "required": false,
+        "default": 20
+    },
+    "fixed_atoms": {
+        "type": "int",
+        "help": "List of atoms to fix (counting starts at 0). If specified, the forces on these atoms will always be set to zero. If supplying arguments from the command line, provide the numbers in series separated by spaces. If using a JSON file, provide them as a list.",
+        "required": false,
+        "nargs": "+"
+    },
+    "constraints": {
+        "type": "str",
+        "help": "Dictionary of constraints to apply to the system. Spring-constant terms can be requested to constrain bond lengths, bond angles, or dihedral angles to their intial values. This can be done through, e.g., `constraints = {\"hookean\": {\"angles\": {\"force_consts\": [1.0, 2.0], \"idx\": [[0, 1, 2], [5, 6, 7]]}, \"bonds\": {...}, \"dihedrals\": {...}}}`. The force constants are given in kcal/mol for angles and dihedrals, and kcal/mol/A^2 for bond lengths. Bond lengths, angles and dihedrals can also be rigorously constrained with SHAKE, so that at each time step they are forced into their proper values, rather than being constrained with Hookean forces. This can be requested by specifying the constraints in the main dictionary, rather than under `hookean`, with the terms (`bond_idx` and `bond_lengths`), (`angle_idx` and `angles`), and (`dihed_idx` and `diheds`). Note, however, that SHAKE may not converge, and may significantly slow down the simulation speed because of the iteration cycles needed to use it. Hookean constrains are usually much better. Lastly, note that if this dictionary is supplied in the command line, it should be given as a JSON string, and if it is supplied in a JSON file then it should be given as a dictionary. ",
+        "required": false
+    },
+    "opt_constraints": {
+        "type": "dict",
+        "help": "If you want the constraints to be different in optimization than in MD, then you can specify them here. These include both `constraints` and `fixed_atoms`. Default is None, which means the constraints will be the same as in MD. If you use this option, it's very important that you supply the target values that you want to constrain each internal coordinate to, rather than just letting the constrain function infer its value from the starting molecule. Because if you don't specify it, then its value will drift during optimization, because a constraining potential doesn't fix an internal to be the exact value. For example, if the dihedral is constrained to be 90 degrees, it may drift to 91 in the optimizaiton. And then in the next optimization cycle, the new value of 91 degrees will be inferred as the target dihedral. Then in that optimization it may drift from 91 to 92, and so on. In this case the only way to prevent that would be to specify the target as 90 from the beginning.",
+        "required": false
+    },
+    "enhanced_sampling": {
+        "type": "str",
+        "help": "Dictionary with information about what type of enhanced sampling to use to accelerate the exploration of conformational space in MD. By default Gaussian-accelerated MD (GAMD) is used, and is the only method currently supported. You can always add new methods to `neural_confgen.py` if you like. If this dictionary is supplied in the command line, it should be given as a JSON string, and if it is supplied in a JSON file then it should be given as a dictionary. ",
+        "required": false,
+        "default": {"method": "GAMD",
+                    "params": {"k_0": 1,
+                               "init_md_steps": 10000}}
+    },
+    "sample_rate_fs": {
+        "type": "str",
+        "help": "Amount of time (in fs) between sampling MD frames to further optimize into conformers. Can be given either as a float, meaning a fixed rate for all types of MD, or as a dictionary, which allows for different sampling rates for different MD types (e.g. regular MD and GAMD). Gets overwritten from the default of `{\"MD\": 300, \"GAMD\": 200}` to `{\"MD\": 500, \"GAMD\": 500}` in single-conformer mode. If this dictionary is supplied in the command line, it should be given as a JSON string, and if it is supplied in a JSON file then it should be given as a dictionary. ",
+        "required": false,
+        "default": {"MD": 300, "GAMD": 200}
+    },
+    "lower_e_tol": {
+        "type": "float",
+        "help": "If, after a round of MD and optimization, the lowest conformer energy has decreased by less than `lower_e_tol` kcal/mol, then the run is stopped.",
+        "required": false,
+        "default": 0.20
+    },
+    "max_md_runs": {
+        "type": "int",
+        "help": "Maximum number of MD runs to perform, even if the last MD run gives a conformer with an energy more than `lower_e_tol` kcal/mol below the previous best energy.",
+        "required": false,
+        "default": 3
+    },
+    "fmax_coarse" :{
+        "type": "float",
+        "help": "The coarse optimization converges when the maximum force component is below `fmax_coarse` eV/A. This value gets overwritten with 0.2 eV/A if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 0.05
+    },
+    "fmax_tight" :{
+        "type": "float",
+        "help": "The tight optimization converges when the maximum force component is below `fmax_tight` eV/A. This value gets overwritten with 0.05 eV/A if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 0.015
+    },
+    "fmax_vtight" :{
+        "type": "float",
+        "help": "The ultra-tight optimization converges when the maximum force component is below `fmax_vtight` eV/A. This value gets overwritten with 0.005 eV/A if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 0.005
+    },
+    "window_coarse" :{
+        "type": "float",
+        "help": "Any conformers with relative energy above `window_coarse` kcal/mol are discarded after coarse optimization. This value gets replaced with 2.0 kcal/mol if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 5.0
+    },
+    "window_tight" :{
+        "type": "float",
+        "help": "Any conformers with relative energy above `window_tight` kcal/mol are discarded after tight optimization. This value gets replaced with 1.5 kcal/mol if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 4.0
+    },
+    "window_vtight" :{
+        "type": "float",
+        "help": "Any conformers with relative energy above `window_vtight` kcal/mol are discarded after ultra-tight optimization. This value gets replaced with 0.5 kcal/mol if `single_conf_mode` is used (see below). ",
+        "required": false,
+        "default": 3.0
+    },
+    "opt_type": {
+        "type": "str",
+        "help": "Optimization method. Can be any optimization engine available in ASE. Note that QuasiNewtown is the same thing as BFGSLineSearch. For optimizations without constraints, but possibly with fixed atoms, QuasiNewton is usually faster than BFGS. But if using constraining forces, it is much much better to use BFGS, since QuasiNewton will often fail completely.",
+        "required": false,
+        "default": "BFGS"
+    },
+    "opt_max_step": {
+        "type": "int",
+        "help": "Maximum number of optimization steps before giving up.",
+        "required": false,
+        "default": 1000
+    },
+    "check_hess": {
+        "help": "Compute the Hessian after finishing an optimization to make sure its frequencies are all real.",
+        "required": false,
+        "action": "store_true"
+    },
+    "max_restart_opt": {
+        "type": "int",
+        "help": "If you compute the Hessian after optimization, and find an imaginary frequency, restart the optimization a maximum of (`max_restart_opt` - 1) times, each time seeded with the computed Hessian.",
+        "required": false,
+        "default": 1
+    },
+    "crest_dedupe": {
+        "type": "str",
+        "help": "If you want to remove duplicates by using the functions in CREST, then specify the parameters for doing so here. CREST will remove duplicates based on RMSD (conformer duplicates), and based on rotational constant + energy difference (rotamers).",
+        "required": false,
+        "default": {"on": true,
+                     "params": {"crest_path": "$HOME/apps/crest-2.11.1",
+                                "xtb_dir": "$HOME/apps/xtb-6.4.1",
+                                "ethr": 0.15,
+                                "rthr": 0.175,
+                                "bthr": 0.03,
+                                "ewin": 10000}}
+    },
+    "single_conf_mode": {
+        "help": "Run `neural_confgen` with the goal of finding only the lowest-energy structure, rather than a complete ensemble of thermally accessible conformers. If this is your goal, then you can significantly accelerate the run by using very loose optimization thresholds in the initial rounds of optimization, together with very tight energy windows. This saves a lot of optimization time, which takes up the bulk of the `neural_confgen` time. This approach will very likely get you the lowest energy conformer, but will miss most of the rest of the ensemble. Note that if this approach is used, then certain parameters will be overwritten (see above).",
+        "required": false,
+        "action": "store_true"
+    },
+    "info_file": {
+        "type": "str",
+        "help": "Path to a JSON file with parameters. Any parameters given in this file overwrite those in the command line.",
+        "required": false
+    },
+    "np": {
+        "type": "int",
+        "help": "Number of parallel processes to use when running confgen jobs for multiple molecules at a time",
+        "required": false
+    },
+    "description": "Script to generate conformers for a molecule using a neural network force field. Can be run with arguments from the command line or specified in a JSON file, or a combination of both (values in the JSON file overwrite those in the command line)."
+}

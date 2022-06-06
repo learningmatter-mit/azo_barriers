@@ -697,7 +697,9 @@ def get_params(info_file):
 
     params = {}
     params.update(non_details)
-    params.update(info['details'])
+
+    if 'details' in info:
+        params.update(info['details'])
 
     return params
 

@@ -14,7 +14,7 @@
     "opt_config": "neuraloptimizer",
     "opt_max_step": 500,
     "fmax": 0.05,
-    "fmax_tight": 0.015,
+    "fmax_tight": 0.05,
     "num_steps": 20,
     "opt_type": "BFGS",
     "use_rdkit": false,
