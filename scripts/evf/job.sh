@@ -8,3 +8,6 @@ python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $dir
 
 # run the script
 python $direc/../../barriers/evf/neural_evf.py > evf.log
+
+# remove the ASE vib folder
+rm -r vib
