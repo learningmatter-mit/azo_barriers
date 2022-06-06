@@ -1,0 +1,44 @@
+{
+    "nnid": 0,
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet",
+    "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F",
+    "end_constraints": {
+        "hookean": {
+            "angles": {
+                "idx": [
+                    [
+                        3,
+                        4,
+                        5
+                    ],
+                    [
+                        4,
+                        5,
+                        6
+                    ]
+                ],
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": [
+                    122,
+                    122
+                ],
+                "force_consts": 627.5
+            },
+            "dihedrals": {
+                "idx": [
+                    [
+                        3,
+                        4,
+                        5,
+                        6
+                    ]
+                ],
+                "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+                "targets": [
+                    90.0
+                ],
+                "force_consts": 627.5
+            }
+        }
+    }
+}

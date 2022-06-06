@@ -1,0 +1,5 @@
+{
+    "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F",
+    "nnid": 0,
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet"
+}
