@@ -224,7 +224,8 @@
     "info_file": {
         "type": "str",
         "help": "Path to a JSON file with parameters. Any parameters given in this file overwrite those in the command line.",
-        "required": false
+        "required": false,
+        "default": "job_info.json"
     },
     "np": {
         "type": "int",

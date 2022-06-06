@@ -140,7 +140,7 @@ def run_from_params(params):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_file', type=str,
+    parser.add_argument('--info_file', type=str,
                         help=('The path with to the config file'),
                         default='job_info.json')
     args = parser.parse_args()

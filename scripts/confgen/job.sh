@@ -7,4 +7,4 @@ direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2
 python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
 
 # run the script
-python $direc/../../barriers/confgen/neural_confgen.py --info_file job_info.json > neural_confgen.log
+python $direc/../../barriers/confgen/neural_confgen.py > neural_confgen.log

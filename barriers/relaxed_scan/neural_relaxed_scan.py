@@ -530,7 +530,8 @@ def combine_params(params):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--info_file',
-                        help=("Name of file with details for the job"))
+                        help=("Name of file with details for the job"),
+                        default='job_info.json')
     args = parser.parse_args()
 
     with open(args.info_file, 'r') as f:

@@ -7,4 +7,4 @@ direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2
 python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
 
 # run the script
-python $direc/../../barriers/hessian/neural_hessian.py --info_file job_info.json > neural_hessian.log
+python $direc/../../barriers/hessian/neural_hessian.py > neural_hessian.log

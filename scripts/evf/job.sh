@@ -7,4 +7,4 @@ direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2
 python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
 
 # run the script
-python $direc/../../barriers/evf/neural_evf.py --info_file job_info.json > evf.log
+python $direc/../../barriers/evf/neural_evf.py > evf.log

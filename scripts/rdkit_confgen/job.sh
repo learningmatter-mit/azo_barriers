@@ -7,6 +7,6 @@ direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2
 python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
 
 # run the script
-python $direc/../../barriers/rdkit_confgen/make_confs.py --info_file job_info.json > rdkit_confs.log
+python $direc/../../barriers/rdkit_confgen/make_confs.py > rdkit_confs.log
 
 
