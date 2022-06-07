@@ -1,7 +1,6 @@
 {
 
-  "csv_data_path": null,
-
+  "csv_data_path": "smiles.csv",
   "max_confs": 200,
   "forcefield": "mmff",
   "nconf_gen": 2000,

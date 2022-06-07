@@ -9,11 +9,15 @@ import pickle
 import numpy as np
 import copy
 from tqdm import tqdm
-from rdkit.Chem import inchi
+from rdkit import Chem
+import argparse
+
 from ase.io.trajectory import Trajectory
 
 from nff.utils.confgen import get_mol
+from nff.utils.misc import bash_command
 from barriers.confgen.neural_confgen import atoms_to_nxyz
+from barriers.utils.neuraloptimizer import get_substruc_idx
 
 ANGLE_CONSTRAINTS = {'constrain_rot': {
     "idx": [[3, 4, 5], [4, 5, 6]],
@@ -22,16 +26,16 @@ ANGLE_CONSTRAINTS = {'constrain_rot': {
     "force_consts": 627.5
 },
     'left_invert': {
-        "idx": [[3, 4, 5]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [179.5],
-        "force_consts": 627.5
+    "idx": [[3, 4, 5]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [179.5],
+    "force_consts": 627.5
 },
     'right_invert': {
-        "idx": [[4, 5, 6]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [179.5],
-        "force_consts": 627.5
+    "idx": [[4, 5, 6]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [179.5],
+    "force_consts": 627.5
 }}
 
 DIHED_CONSTRAINTS = {'left_rot': {
@@ -41,10 +45,10 @@ DIHED_CONSTRAINTS = {'left_rot': {
     "force_consts": 627.5
 },
     'right_rot': {
-        "idx": [[3, 4, 5, 6]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [-90.0],
-        "force_consts": 627.5
+    "idx": [[3, 4, 5, 6]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [-90.0],
+    "force_consts": 627.5
 }}
 
 MECH_CONSTRAINTS = [{"angles": ANGLE_CONSTRAINTS['constrain_rot'],
@@ -59,6 +63,8 @@ NAME_LIST = ['left_rot', 'right_rot', 'left_invert', 'right_invert']
 AZO_FIXED_ATOMS = {"idx": [3, 4, 5, 6],
                    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"}
 
+TRANS_AZO = "c1ccc(/N=N/c2ccccc2)cc1"
+CIS_AZO = "c1ccc(/N=N\\c2ccccc2)cc1"
 SCRIPTS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                        '../../scripts')
 
@@ -72,7 +78,8 @@ def rd_to_nxyz(rd_mol):
     return nxyz
 
 
-def load_rdkit_confgen(rd_dir):
+def load_rdkit_confgen(rd_dir,
+                       only_trans):
 
     info_list = []
     files = [i for i in os.listdir(rd_dir) if i.endswith("pickle")]
@@ -86,9 +93,20 @@ def load_rdkit_confgen(rd_dir):
             continue
 
         rd_mol = dic['conformers'][0]['rd_mol']
+        smiles = dic['smiles']
+
+        mol_no_h = get_mol(smiles)
+
+        if only_trans:
+            template_mol = Chem.MolFromSmiles(TRANS_AZO)
+            keep = mol_no_h.HasSubstructMatch(template_mol,
+                                              useChirality=True)
+            if not keep:
+                continue
+
         info = {"nxyz": rd_to_nxyz(rd_mol),
-                "smiles": dic['smiles'],
-                "inchikey": inchi.MolToInchiKey(get_mol(dic['smiles']))}
+                "smiles": smiles,
+                "inchikey": Chem.inchi.MolToInchiKey(mol_no_h)}
 
         info_list.append(info)
 
@@ -97,13 +115,18 @@ def load_rdkit_confgen(rd_dir):
 
 def make_scan_info_list(rd_dir,
                         base_info):
-    info_list = load_rdkit_confgen(rd_dir)
+    info_list = load_rdkit_confgen(rd_dir=rd_dir,
+                                   only_trans=True)
     new_info_list = []
     for info in info_list:
         for constraints in MECH_CONSTRAINTS:
             new_info = copy.deepcopy(base_info)
             new_info.update(info)
             new_info.update({"end_constraints": {"hookean": constraints}})
+
+            if isinstance(base_info.get("relaxed_scan"), dict):
+                new_info.update(base_info['relaxed_scan'])
+
             new_info_list.append(new_info)
 
     return new_info_list
@@ -198,6 +221,9 @@ def make_ts_confgen_info_list(base_info,
         new_info.update({'nxyz': nxyz,
                          'fixed_atoms': AZO_FIXED_ATOMS})
 
+        if isinstance(base_info.get("confgen"), dict):
+            new_info.update(base_info['confgen'])
+
         info_list.append(new_info)
 
     return info_list
@@ -253,5 +279,159 @@ def rdkit_to_neural_confgen_dirs():
     pass
 
 
-# TO-DO:
-# - Fix rdkit to scan. It should only pick up the trans species
+def bond_idx_match(bond,
+                   idx):
+
+    start_idx = bond.GetBeginAtomIdx()
+    end_idx = bond.GetEndAtomIdx()
+
+    match = set([start_idx, end_idx]) == set(idx)
+
+    return match
+
+
+def make_cis_trans(smiles_list):
+
+    full_smiles_list = []
+    for smiles in smiles_list:
+        template_mol = Chem.MolFromSmiles(TRANS_AZO)
+        mol_no_h = Chem.MolFromSmiles(smiles)
+        keep = mol_no_h.HasSubstructMatch(template_mol,
+                                          useChirality=False)
+        if not keep:
+            print(("Smiles %s doesn't have an azobenzene substructure; skipping" %
+                   smiles))
+            continue
+
+        substruc_idx = get_substruc_idx(template_smiles=TRANS_AZO,
+                                        smiles=smiles)
+        nn_idx = substruc_idx[4:6]
+
+        isomers = [Chem.BondStereo.STEREOZ, Chem.BondStereo.STEREOE]
+        for bond_iso in isomers:
+            new_mol = Chem.MolFromSmiles(smiles)
+            nn_bond_pairs = [[i, b] for i, b in enumerate(new_mol.GetBonds()) if
+                             bond_idx_match(bond=b, idx=nn_idx)]
+            if len(nn_bond_pairs) != 1:
+                print(("Problem finding the N=N bond in the azobenzene subtstructure "
+                       "of smiles %s. Skipping" % smiles))
+                continue
+
+            bond_idx, bond = nn_bond_pairs[0]
+            bond.SetStereo(bond_iso)
+
+            new_smiles = Chem.MolToSmiles(Chem.MolFromSmiles(
+                Chem.MolToSmiles(
+                    new_mol
+                )))
+            full_smiles_list.append(new_smiles)
+
+    return full_smiles_list
+
+
+def make_rdkit_dir(rd_dir,
+                   base_info):
+    smiles_list = base_info['smiles_list']
+    smiles_list = make_cis_trans(smiles_list)
+
+    csv_path = os.path.join(rd_dir, 'smiles.csv')
+    text = "smiles\n"
+    for smiles in smiles_list:
+        text += "%s\n" % smiles
+
+    with open(csv_path, 'w') as f:
+        f.write(text)
+
+    info_path = os.path.join(rd_dir, 'job_info.json')
+    info = copy.deepcopy(base_info)
+    if isinstance(base_info.get("rdkit_confgen"), dict):
+        info.update(base_info['rdkit_confgen'])
+
+    # remove smiles_list from info because it leads to weird conflicts
+    # with loading the smiles from csv
+
+    if 'smiles_list' in info:
+        info.pop('smiles_list')
+
+    with open(info_path, 'w') as f:
+        json.dump(info, f, indent=4)
+
+
+def make_all_subdirs(base_dir):
+    names = ['rdkit_confgen', 'relaxed_scan', 'confgen', 'evf', 'irc']
+    dic_info = {name: os.path.join(base_dir, 'results', name)
+                for name in names}
+
+    for direc in dic_info.values():
+        if os.path.isdir(direc):
+            continue
+        os.makedirs(direc)
+
+    return dic_info
+
+
+def run_stage(stage,
+              dir_info,
+              base_dir,
+              do_batch):
+
+    print("Running %s stage..." % stage)
+
+    sub_dir = dir_info[stage]
+    job_file = 'batch.sh' if do_batch else 'job.sh'
+    job_script = os.path.join(SCRIPTS, stage, job_file)
+    cmd = "cd %s && bash %s" % (sub_dir, job_script)
+    p = bash_command(cmd)
+    p.wait()
+
+    os.chdir(base_dir)
+
+    print("%s complete!" % stage)
+
+
+def run_all(base_dir):
+    info_path = os.path.join(base_dir, 'job_info.json')
+    with open(info_path, 'r') as f:
+        base_info = json.load(f)
+
+    dir_info = make_all_subdirs(base_dir=base_dir)
+    make_rdkit_dir(rd_dir=dir_info['rdkit_confgen'],
+                   base_info=base_info)
+
+    run_stage(stage='rdkit_confgen',
+              dir_info=dir_info,
+              base_dir=base_dir,
+              do_batch=False,)
+
+    rdkit_to_scan_dirs(rd_dir=dir_info['rdkit_confgen'],
+                       scan_dir=dir_info['relaxed_scan'],
+                       base_info=base_info)
+
+    run_stage(stage='relaxed_scan',
+              dir_info=dir_info,
+              base_dir=base_dir,
+              do_batch=True)
+
+    scan_to_confgen_dirs(scan_dir=dir_info['relaxed_scan'],
+                         confgen_dir=dir_info['confgen'],
+                         base_info=base_info)
+
+    run_stage(stage='confgen',
+              dir_info=dir_info,
+              base_dir=base_dir,
+              do_batch=True)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base_dir",
+                        type=str,
+                        help="Where to run the calculations",
+                        default=".")
+    args = parser.parse_args()
+
+    run_all(base_dir=args.base_dir)
+
+
+if __name__ == "__main__":
+    main()
