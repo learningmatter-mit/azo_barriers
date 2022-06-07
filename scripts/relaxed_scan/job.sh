@@ -1,3 +1,4 @@
+
 source activate barriers
 
 # get the directory of this script
