@@ -1,3 +1,4 @@
 env_to_req.py
 __pycache__
-full_workflow
+full_workflow/testing/results
+full_workflow/testing/summary.pickle
