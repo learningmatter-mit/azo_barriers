@@ -54,13 +54,39 @@ def to_json(dic):
     return dic
 
 
+def add_converged(atoms,
+                  results,
+                  ts_cutoff,
+                  mode_results,
+                  imag_cutoff,
+                  ev_kwargs):
+
+    freqs = np.array(mode_results['vibfreqs'])
+    imgfreq = len((freqs < 0).nonzero()[0])
+    grad = atoms.get_forces()
+
+    fmax = abs(grad).max()
+    with open('fmax', 'w') as f:
+        f.write(str(fmax))
+
+    converged = fmax < ev_kwargs["convergence"]
+    converged = all([converged,
+                     freqs[0] <= ts_cutoff,
+                     imgfreq == 1])
+
+    results['converged'] = converged
+
+
 def save_results(xyz,
                  grad,
                  energy,
                  rmslist,
                  maxlist,
                  atoms,
-                 mode_results):
+                 mode_results,
+                 imag_cutoff,
+                 ts_cutoff,
+                 ev_kwargs):
 
     numbers = atoms.get_atomic_numbers()
     nxyz = np.concatenate([numbers.reshape(-1, 1),
@@ -77,12 +103,19 @@ def save_results(xyz,
     add_results = {key: val for key, val in to_json(mode_results).items()
                    if key not in exclude_keys}
 
+    add_converged(atoms=atoms,
+                  results=add_results,
+                  ts_cutoff=ts_cutoff,
+                  mode_results=mode_results,
+                  imag_cutoff=imag_cutoff,
+                  ev_kwargs=ev_kwargs)
+
     info = {"nxyz": nxyz.tolist(),
             "forces": forces.tolist(),
             "energy": energy * EV_TO_AU,
             "rms_grad": rmslist[-1].item() * grad_conv,
-            "max_grad": maxlist[-1].item() * grad_conv,
-            **add_results}
+            "max_grad": maxlist[-1].item() * grad_conv}
+    info.update(add_results)
 
     with open(PICKLE_SAVE_PATH, 'wb') as f:
         pickle.dump(info, f)
@@ -92,7 +125,8 @@ def run_from_atoms(atoms,
                    calc_kwargs,
                    ev_kwargs,
                    atoms_kwargs,
-                   thermo_kwargs):
+                   thermo_kwargs,
+                   ts_cutoff):
 
     nbr_update_period = atoms_kwargs["nbr_update_period"]
     output = ev_run(ev_atoms=atoms,
@@ -121,7 +155,10 @@ def run_from_atoms(atoms,
                  rmslist=rmslist,
                  maxlist=maxlist,
                  atoms=atoms,
-                 mode_results=mode_results)
+                 mode_results=mode_results,
+                 imag_cutoff=imag_cutoff,
+                 ts_cutoff=ts_cutoff,
+                 ev_kwargs=ev_kwargs)
 
     return output
 
@@ -141,7 +178,8 @@ def run_from_params(params):
                             calc_kwargs=calc_kwargs,
                             ev_kwargs=ev_kwargs,
                             atoms_kwargs=atoms_kwargs,
-                            thermo_kwargs=thermo_kwargs)
+                            thermo_kwargs=thermo_kwargs,
+                            ts_cutoff=params["cutoff_to_be_ts"])
 
     return output
 

@@ -7,7 +7,7 @@ direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2
 python $direc/../../barriers/utils/render_info.py --cwd $(pwd) --script_dir $direc
 
 # run the script
-python $direc/../../barriers/irc/neural_irc.py # > neural_irc.log
+python $direc/../../barriers/irc/neural_irc.py > neural_irc.log
 
 # remove the ASE vib folder
 rm -r vib

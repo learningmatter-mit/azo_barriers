@@ -915,6 +915,13 @@ def load_and_modify(info_path):
 
     info['singlet_params'] = singlet_params
 
+    for key in ['nnid', 'weightpath']:
+        if info.get('triplet_params', {}).get(key) is not None:
+            continue
+        if 'triplet_params' not in info:
+            continue
+        info['triplet_params'][key] = info.get("triplet_" + key)
+
     return info
 
 

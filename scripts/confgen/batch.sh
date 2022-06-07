@@ -51,7 +51,7 @@ while IFS= read -r line; do
 	}
 
 	# change --np to the number of jobs you want to run in parallel at once
-	python $direc/../../barriers/confgen/batched_neural_confgen.py --info_file job_info.json --np 50 > neural_confgen.log
+	python $direc/../../barriers/confgen/batched_neural_confgen.py --info_file job_info.json --np 10 > neural_confgen.log
 	clean_up
 
 done <<< "$text"

@@ -66,8 +66,13 @@
         "shake": false
     },
     "exclude_from_rmsd": {
-        "template_smiles": null,
-        "idx": null
+        "idx": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"
     },
     "sample_rate_fs": 100,
     "lower_e_tol": 0.2,
