@@ -244,9 +244,14 @@ def scan_to_confgen_dirs(scan_dir,
     render_general_batch(direc=confgen_dir,
                          config_name='confgen')
 
+
 def rdkit_to_neural_confgen_dirs():
     """
     Take the results of RDKit conformer generation and use them as input to a neural
     confgen job to optimize the cis and trans endpoints.
     """
     pass
+
+
+# TO-DO:
+# - Fix rdkit to scan. It should only pick up the trans species

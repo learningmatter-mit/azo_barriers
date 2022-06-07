@@ -44,7 +44,7 @@ while IFS= read -r line; do
 		cd $cwd
 
 		mv $scratch/*  .
-		rm -r $scfolder
+		rm -r $scratch
 
 		shopt -u extglob
 		echo 'Finished cleaning up'
