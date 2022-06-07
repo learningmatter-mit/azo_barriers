@@ -3,3 +3,4 @@ __pycache__
 */full_workflow/testing/results
 */full_workflow/testing/summary.pickle
 django-debug.log
+jobdirparser.log
