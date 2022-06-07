@@ -743,7 +743,7 @@ def sample_confs(base_dir,
 
     # update the master `conf_dic` dictionary
 
-    num_atoms = np.array([len(these_params['coords'])
+    num_atoms = np.array([len(these_params['nxyz'])
                           for these_params in this_params_list])
     nxyz_lists = [atoms_batch_to_nxyz(conf, num_atoms) for conf in
                   sampled_confs]
@@ -1293,7 +1293,7 @@ def run_cre_check(nxyz_list,
     can instead just slice their positions and energies into batches
     """
 
-    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'crest')
+    crest_path = os.path.join(os.environ["CONDA_PREFIX"], 'bin/crest')
     base_name = make_rand_string()
     job_dir = os.path.join("/tmp", base_name)
 
@@ -1316,7 +1316,6 @@ def run_cre_check(nxyz_list,
     write_confs_xyz(nxyz_list=nxyz_list[:1],
                     energy_list=energy_list[:1],
                     path=conf_0_path)
-
 
     command = ("%s %s -cregen %s -ethr %.6f -rthr %.6f -bthr %.6f -ewin %.6f -enso "
                "> cregen.out" % (crest_path, conf_0_path, confs_path, ethr, rthr,
@@ -1900,6 +1899,7 @@ def init_is_done_list(params_list):
             is_done_list.append(params['mol_index'])
     return is_done_list
 
+
 def set_mtd_times(base_dir):
     for i in os.listdir(base_dir):
         path = os.path.join(base_dir, i, 'job_info.json')
@@ -1909,7 +1909,8 @@ def set_mtd_times(base_dir):
         with open(path, 'r') as f:
             params = json.load(f)
         set_mtd_time(info_file=path,
-                 params=params)
+                     params=params)
+
 
 def main(base_dir):
 

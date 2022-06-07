@@ -3,13 +3,21 @@ source activate barriers
 # get the directory of this script
 direc="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
+# render the info files using `default_details.json`, updated with whatever is in `job_info.json`
+folders=$(ls -d */)
+for folder in ${folders[@]}; do
+	python $direc/../../barriers/utils/render_info.py --cwd $folder --script_dir $direc
+done
+
+
 # do a certain number of chunks at a time so that if the job doesn't finish,
 # we still get results from lots of molecules
 
 # change --batch_size to the number of chunks you want to do at a time
 
-text=$(python split_folders.py --job_dir "." --batch_size 100 )
+text=$(python $direc/split_folders.py --job_dir "." --batch_size 100 )
 cwd=$(pwd)
+
 
 while IFS= read -r line; do
 

@@ -3,6 +3,8 @@ import os
 import numpy as np
 import argparse
 
+from barriers.confgen.batched_neural_confgen import set_mtd_times
+
 
 def sort_by_time(dirs):
     mtd_times = []
@@ -13,7 +15,10 @@ def sort_by_time(dirs):
         with open(path, 'r') as f:
             info = json.load(f)
 
-        mtd_time = info['details']['mtd_time']
+        if 'details' in info:
+            info.update(info['details'])
+
+        mtd_time = info['mtd_time']
         mtd_times.append(mtd_time)
 
     idx = np.argsort(mtd_times).tolist()
@@ -47,6 +52,8 @@ def main():
     parser.add_argument("--batch_size",
                         type=int)
     args = parser.parse_args()
+
+    set_mtd_times(base_dir=args.job_dir)
     split_str = make_subfolders(job_dir=args.job_dir,
                                 batch_size=args.batch_size)
     print(split_str)
