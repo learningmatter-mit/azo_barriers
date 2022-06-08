@@ -1,9 +1,8 @@
-\newcommand\latexcode[1]{#1}
 # Thermal barriers of azobenzene derivatives
 
 This repository contains code for computing the thermal barriers of azobenzene derivatives. The code base uses a neural network force field (NFF) to compute energies and gradients. These are in turn used to optimize reactants, products, transition states, and singlet-triplet crossing points for intersystem crossing.
 
-This code repository is developed in the Learning Matter Lab (led by prof. Rafael G\latexcode{\'{o}}mez-Bombarelli) at MIT.
+This code repository is developed in the Learning Matter Lab (led by prof. Rafael Gomez-Bombarelli) at MIT.
 
 ## Conda environment
 
