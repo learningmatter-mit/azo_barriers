@@ -1,7 +1,7 @@
 {
-    "nnid": null,
     "weightpath": null,
     "nxyz": null,
+    "nnid": "",
     "device": 0,
     "ev_kwargs": {
         "maxstepsize": 0.15,
@@ -30,5 +30,6 @@
         "flip_all_but_ts": true,
         "imag_cutoff": 0
     },
-    "cutoff_to_be_ts": -200
+    "cutoff_to_be_ts": -200,
+    "confs_per_ts": 5
 }

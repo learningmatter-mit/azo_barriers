@@ -3,12 +3,13 @@
     "nnid": null,
     "weightpath": null,
     "triplet_params": {
-        "nnid": null,
+        "nnid": "",
         "weightpath": null,
         "en_key": "energy_0",
         "model_kwargs": null,
         "cutoff": 5.0
     },
+    "triplet_nnid": "",
     "init_displ_de": 0.000398,
     "max_iter": 500,
     "tol_max_g": 0.0001,

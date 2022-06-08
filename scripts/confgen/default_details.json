@@ -1,8 +1,8 @@
 {
-    "nnid": null,
     "weightpath": null,
     "smiles": null,
     "nxyz": null,
+    "nnid": "",
     "en_key": "energy_0",
     "model_kwargs": null,
     "device": 0,

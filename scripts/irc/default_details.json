@@ -1,7 +1,7 @@
 {
     "nxyz": null,
-    "nnid": null,
     "weightpath": null,
+    "nnid": "",
     "device": 0,
     "en_key": "energy_0",
     "model_kwargs": null,
@@ -20,5 +20,6 @@
     "cutoff_skin": 2.0,
     "nbr_update_period": 1,
     "directed": true,
-    "requires_large_offsets": false
+    "requires_large_offsets": false,
+    "confs_per_ts": 1
 }

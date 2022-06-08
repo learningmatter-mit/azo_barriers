@@ -1,7 +1,7 @@
 {
-    "nnid": null,
     "weightpath": null,
     "nxyz": null,
+    "nnid": "",
     "atoms_kwargs": {
         "cutoff": 5.0,
         "cutoff_skin": 2.0,
@@ -25,5 +25,6 @@
     "pressure": 101325,
     "imag_cutoff": 0,
     "rotor_cutoff": 50,
-    "iroot": 0
+    "iroot": 0,
+    "confs_per_endpoint": 1
 }

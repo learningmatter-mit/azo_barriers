@@ -12,14 +12,8 @@
     "rdkit_confgen": {},
     "relaxed_scan": {},
     "confgen": {},
-    "evf": {
-        "confs_per_ts": 5
-    },
-    "hessian": {
-        "confs_per_endpoint": 1
-    },
-    "irc": {
-        "confs_per_ts": 1
-    },
+    "evf": {},
+    "hessian": {},
+    "irc": {},
     "triplet_crossing": {}
 }
