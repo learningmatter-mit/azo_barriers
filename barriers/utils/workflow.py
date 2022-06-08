@@ -792,8 +792,8 @@ def run_confgen(dir_info,
               dir_info=dir_info,
               base_dir=base_dir,
               do_batch=True,
-              description=('conformer generation on the TSs, the reactants, '
-                           'and the products.'))
+              description=('conformer generation on the TSs, reactants, '
+                           'and products'))
 
 
 def run_evf(dir_info,
