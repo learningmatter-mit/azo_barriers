@@ -43,6 +43,10 @@ This should produce a series of calculations for two different molecules. The ca
 - Singlet-triplet minimum energy crossing point search
 - Intrinsic reaction coordinate generation for the optimized TSs
 
-To run this calculation for your own choice molecules, simply set their SMILES strings under the key `smiles_list` in the file `examples/job_info.json` (you only need to provide one cis or trans SMILES per molecule). You can also set the directory of your singlet NN model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the device you want to use (`cpu` if you have no GPUs, or an index of the number GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
+To run this for your own azobenzene derivatives, simply supply thier SMILES strings in `examples/job_info.json`:
+```
+"smiles_list": [...]
+````
+Note that you only need to provide one cis or trans SMILES per molecule. You can also set the directory of your singlet NN model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the device you want to use (`cpu` if you have no GPUs, or an index of the number GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
 
 The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tutorials) show how to load, visualize, and interpret the results (see below). They also go into some detail about other parameters you can specify in `job_info.json`
