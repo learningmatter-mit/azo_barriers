@@ -8,9 +8,20 @@
     "device": 2,
     "rdkit_confgen": {},
     "relaxed_scan": {},
-    "confgen": {},
-    "evf": {},
-    "hessian": {},
-    "irc": {},
-    "triplet_crossing": {}
+    "confgen": {
+        "num_parallel": 10,
+        "num_in_chunk": 100
+    },
+    "evf": {
+        "num_parallel": 2
+    },
+    "hessian": {
+        "num_parallel": 2
+    },
+    "irc": {
+        "num_parallel": 2
+    },
+    "triplet_crossing": {
+        "num_parallel": 2
+    }
 }
