@@ -10,12 +10,14 @@ for folder in ${folders[@]}; do
 done
 
 
-# do a certain number of chunks at a time so that if the job doesn't finish,
-# we still get results from lots of molecules
+folder=$(ls -d */ | head -n 1)
+# get number of chunks in which to split the jobs
+num_chunk=$(cat $folder/job_info.json | jq ".num_in_chunk")
+# get number of parallel jobs to be run at once
+num_parallel=$(cat $folder/job_info.json | jq ".num_parallel")
 
-# change --batch_size to the number of chunks you want to do at a time
-
-text=$(python $direc/split_folders.py --job_dir "." --batch_size 100 )
+# split folders into chunks to do together
+text=$(python $direc/split_folders.py --job_dir "." --batch_size $num_chunk )
 cwd=$(pwd)
 
 
@@ -50,8 +52,7 @@ while IFS= read -r line; do
 		echo 'Finished cleaning up'
 	}
 
-	# change --np to the number of jobs you want to run in parallel at once
-	python $direc/../../barriers/confgen/batched_neural_confgen.py --info_file job_info.json --np 10 > neural_confgen.log
+	python $direc/../../barriers/confgen/batched_neural_confgen.py --info_file job_info.json --np $num_parallel > neural_confgen.log
 	clean_up
 
 done <<< "$text"

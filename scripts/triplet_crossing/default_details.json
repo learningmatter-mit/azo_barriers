@@ -2,6 +2,7 @@
     "nxyz": null,
     "nnid": null,
     "weightpath": null,
+    "num_parallel": 2,
     "triplet_params": {
         "nnid": "",
         "weightpath": null,

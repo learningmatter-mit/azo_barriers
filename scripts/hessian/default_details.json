@@ -1,6 +1,7 @@
 {
     "weightpath": null,
     "nxyz": null,
+    "num_parallel": 2,
     "nnid": "",
     "atoms_kwargs": {
         "cutoff": 5.0,

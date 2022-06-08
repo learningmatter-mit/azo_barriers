@@ -858,7 +858,8 @@ def run_irc(dir_info,
 
 
 def run_simulations(**kwargs):
-    funcs = [run_rdkit, run_relaxed_scan, run_confgen, run_hess,
+    funcs = [# run_rdkit, 
+    run_relaxed_scan, run_confgen, run_hess,
              run_evf, run_triplet, run_irc]
 
     for func in funcs:

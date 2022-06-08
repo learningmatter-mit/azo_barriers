@@ -2,6 +2,7 @@
     "nxyz": null,
     "smiles": null,
     "weightpath": null,
+    "num_parallel": 2,
     "nnid": "",
     "en_key": "energy_0",
     "model_kwargs": null,

@@ -1,6 +1,7 @@
 {
     "nxyz": null,
     "weightpath": null,
+    "num_parallel": 2,
     "nnid": "",
     "device": 0,
     "en_key": "energy_0",
