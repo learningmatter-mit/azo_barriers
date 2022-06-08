@@ -12,6 +12,8 @@ from rdkit import Chem
 import argparse
 
 from ase.io.trajectory import Trajectory
+from ase.build import minimize_rotation_and_translation as align
+from ase import Atoms
 
 from nff.utils.confgen import get_mol
 from nff.utils.misc import bash_command
@@ -19,6 +21,7 @@ from nff.utils import constants as const
 
 from barriers.confgen.neural_confgen import atoms_to_nxyz
 from barriers.utils.neuraloptimizer import get_substruc_idx
+from barriers.utils.parse import make_isc_props
 
 ANGLE_CONSTRAINTS = {'constrain_rot': {
     "idx": [[3, 4, 5], [4, 5, 6]],
@@ -27,16 +30,16 @@ ANGLE_CONSTRAINTS = {'constrain_rot': {
     "force_consts": 627.5
 },
     'left_invert': {
-        "idx": [[3, 4, 5]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [179.5],
-        "force_consts": 627.5
+    "idx": [[3, 4, 5]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [179.5],
+    "force_consts": 627.5
 },
     'right_invert': {
-        "idx": [[4, 5, 6]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [179.5],
-        "force_consts": 627.5
+    "idx": [[4, 5, 6]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [179.5],
+    "force_consts": 627.5
 }}
 
 DIHED_CONSTRAINTS = {'left_rot': {
@@ -46,10 +49,10 @@ DIHED_CONSTRAINTS = {'left_rot': {
     "force_consts": 627.5
 },
     'right_rot': {
-        "idx": [[3, 4, 5, 6]],
-        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
-        "targets": [-90.0],
-        "force_consts": 627.5
+    "idx": [[3, 4, 5, 6]],
+    "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1",
+    "targets": [-90.0],
+    "force_consts": 627.5
 }}
 
 MECH_CONSTRAINTS = [{"angles": ANGLE_CONSTRAINTS['constrain_rot'],
@@ -72,9 +75,15 @@ CONFIG_NAMES = ['rdkit_confgen',
                 'triplet_crossing',
                 'hessian']
 
-ENTROPY_CONV = 8805.96228743921
+ENTROPY_CONV = 8805.96228743921  # to J / mol K
 TEMP = 298.15
-KB_HA = 3.167e-6
+KB_HA = 3.167e-6  # atomic units
+KB_SI = 1.380649e-23  # SI units
+H_PLANCK = 6.62607015e-34  # SI units
+MOL = 6.02214076e23
+CAL_TO_J = 4.184
+
+
 SCRIPTS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                        '../../scripts')
 
@@ -914,7 +923,8 @@ def make_ts_summary(ts_sub_dir):
                'energy', 'nxyz']
     translate = {"freeenergy": "free_energy"}
     ts_summary = {"smiles": old_info['smiles'],
-                  "mechanism": old_info["mechanism"]}
+                  "mechanism": old_info["mechanism"],
+                  "confnum": old_info["confnum"]}
 
     for key in ts_keys:
         if key not in dic:
@@ -1095,48 +1105,354 @@ def summarize_endpoints(hess_dir,
         sub_dic[new_key] = end_summary
 
 
+def make_mech_ts_summary(ts_dic,
+                         sub_dic,
+                         end_key,
+                         trace=False):
+
+    ts_summary = {"ts_nxyz": ts_dic["nxyz"],
+                  "endpoint_nxyz": sub_dic.get(end_key, {}).get("nxyz")}
+
+    use_keys = ['free_energy',
+                'energy',
+                'entropy',
+                'enthalpy',
+                'free_energy_no_conf',
+                'conf_free_energy',
+                'conf_entropy',
+                'vib_entropy']
+
+    use_keys += ["eff_%s" % i for i in use_keys]
+
+    end_dic = sub_dic.get(end_key, {})
+    for key in use_keys:
+        # if key == 'eff_free_energy':
+        # import pdb
+        # pdb.set_trace()
+        end_val = end_dic.get(key)
+        if end_val is None:
+            end_val = end_dic.get(key.replace("eff_", ""))
+        if end_val is None:
+            continue
+
+        if key not in ts_dic:
+            continue
+
+        delta = ts_dic[key] - end_val
+        if 'energy' in key or 'enthalpy' in key:
+            delta *= const.HARTREE_TO_KCAL_MOL
+        ts_summary["delta_" + key] = delta
+
+    for key in list(ts_summary.keys()):
+        if 'entropy' not in key:
+            continue
+        new_key = key + '_j_mol_k'
+        ts_summary[new_key] = (ts_summary[key] * ENTROPY_CONV)
+        ts_summary.pop(key)
+
+    ts_summary.update({"endpoint_conf_g": end_dic.get("conf_free_energy"),
+                       "ts_conf_g": ts_dic.get("conf_free_energy")})
+    for key in ['mechanism', 'confnum']:
+        if ts_dic.get(key) is not None:
+            ts_summary.update({key: ts_dic[key]})
+
+    for key in ['endpoint_conf_g', 'ts_conf_g']:
+        if ts_summary.get(key) is not None:
+            ts_summary[key] *= const.AU_TO_KCAL['energy']
+
+    return ts_summary
+
+
+def update_mech_dic(ts_dic,
+                    sub_dic,
+                    end_key):
+
+    ts_summary = make_mech_ts_summary(ts_dic=ts_dic,
+                                      sub_dic=sub_dic,
+                                      end_key=end_key)
+    sub_dic['results_by_mechanism'][end_key]['ts'].append(ts_summary)
+
+
 def make_results_by_mech(final_info_dict):
     for sub_dic in final_info_dict.values():
         ts_lists = sub_dic['transition_states']
         min_g_ts_list = [sorted(i, key=lambda x: x['free_energy'])[0]
                          for i in ts_lists]
-        sub_dic['results_by_mechanism'] = {"cis": [], "trans": []}
+        sub_dic['results_by_mechanism'] = {key: {"s_t_crossing": [],
+                                                 "ts": []} for key in ['cis', 'trans']}
 
         for end_key in ['cis', 'trans']:
             for ts_dic in min_g_ts_list:
-                ts_summary = {"ts_nxyz": ts_dic["nxyz"],
-                              "endpoint_nxyz": sub_dic.get(end_key, {}).get("nxyz")}
+                update_mech_dic(ts_dic=ts_dic,
+                                sub_dic=sub_dic,
+                                end_key=end_key)
 
-                use_keys = ['free_energy', 'energy', 'entropy', 'enthalpy',
-                            'free_energy_no_conf', 'conf_free_energy', 'conf_entropy',
-                            'vib_entropy']
 
-                end_dic = sub_dic.get(end_key, {})
-                for key in use_keys:
-                    end_val = end_dic.get(key)
-                    if end_val is None:
+def select_isc(ts_list):
+    dics = [i for i in ts_list if 's_t_crossing' in i]
+    return dics
+
+
+def update_mech_w_isc(final_info_dict):
+    for sub_dic in final_info_dict.values():
+        ts_lists = [select_isc(i) for i in sub_dic['transition_states']]
+        sort_g_dics = [sorted(ts_list, key=lambda x: x.get("eff_free_energy",
+                                                           float("inf")))
+                       for ts_list in ts_lists]
+        min_g_dics = [dics[0] for dics in sort_g_dics if dics]
+
+        mech_results = sub_dic['results_by_mechanism']
+
+        for dic in min_g_dics:
+            for end_key in ['cis', 'trans']:
+                s_t_dics = dic['s_t_crossing']
+                s_t_summaries = []
+                for s_t_dic in s_t_dics:
+                    if not s_t_dic['converged']:
                         continue
-                    delta = ts_dic[key] - end_val
-                    if 'energy' in key or 'enthalpy' in key:
-                        delta *= const.HARTREE_TO_KCAL_MOL
-                    ts_summary["delta_" + key] = delta
+                    s_t_summary = make_mech_ts_summary(ts_dic=s_t_dic,
+                                                       sub_dic=sub_dic,
+                                                       end_key=end_key,
+                                                       trace=True)
+                    s_t_summary.update({"endpoint": s_t_dic["endpoint"]})
+                    s_t_summaries.append(s_t_summary)
 
-                for key in list(ts_summary.keys()):
-                    if 'entropy' not in key:
-                        continue
-                    new_key = key + '_j_mol_k'
-                    ts_summary[new_key] = (ts_summary[key] * ENTROPY_CONV)
-                    ts_summary.pop(key)
+                mech_results[end_key]['s_t_crossing'].append(s_t_summaries)
 
-                ts_summary.update({"endpoint_conf_g": end_dic.get("conf_free_energy"),
-                                   "ts_conf_g": ts_dic.get("conf_free_energy"),
-                                   "mechanism": ts_dic['mechanism']})
 
-                for key in ['endpoint_conf_g', 'ts_conf_g']:
-                    if ts_summary.get(key) is not None:
-                        ts_summary[key] *= const.AU_TO_KCAL['energy']
+def get_effective_isc_dg(props):
 
-                sub_dic['results_by_mechanism'][end_key].append(ts_summary)
+    k_isc = 1 / props['t_isc']
+    # delta S from k_isc, in J/(mol K)
+    ds = KB_SI * (np.log(H_PLANCK * k_isc / (KB_SI * TEMP)) - 1 / 2) * MOL
+
+    # corresponding dg, in Ha
+    dg = -ds * TEMP / 1000 / CAL_TO_J * const.KCAL_TO_AU['energy']
+
+    return dg
+
+
+def nxyz_to_atoms(nxyz):
+    atoms = Atoms(numbers=np.array(nxyz)[:, 0],
+                  positions=np.array(nxyz)[:, 1:])
+    return atoms
+
+
+def determine_triplet_side(props_list,
+                           react_idx,
+                           cis_nxyz=None,
+                           trans_nxyz=None):
+    """
+    From two positions of singlet/triplet crossings, figure out which is closer to the
+    cis and which closer to trans.
+    """
+
+    msg = "Need to provide either the reactant or product nxyz"
+    assert (trans_nxyz is not None) or (cis_nxyz is not None), msg
+    atoms_dic = {"trans": trans_nxyz, "cis": cis_nxyz}
+    use_dic = {key: val for key, val in atoms_dic.items() if val is not None}
+
+    key = list(use_dic.keys())[0]
+    eff_ref_atoms = nxyz_to_atoms(np.array(use_dic[key])[react_idx])
+    rmsds = []
+
+    for props in props_list:
+        crossing_nxyz = props['nxyz']
+        eff_cross_atoms = nxyz_to_atoms(np.array(crossing_nxyz)[react_idx])
+        align(eff_ref_atoms, eff_cross_atoms)
+
+        num_atoms = len(eff_ref_atoms)
+        rmsd = (((eff_cross_atoms.get_positions() -
+                  eff_ref_atoms.get_positions()) ** 2).sum() / num_atoms) ** 0.5
+
+        rmsds.append(rmsd)
+
+    argmin = int(np.argmin(rmsds))
+    other_key = "trans" if key == "cis" else "cis"
+    other_arg = 1 - argmin
+    summary_dic = {argmin: key, other_arg: other_key}
+    summary_list = [summary_dic[i] for i in range(2)]
+
+    for i, endpoint in enumerate(summary_list):
+        props_list[i].update({"endpoint": endpoint})
+
+
+def get_some_isc_info(final_info_dict,
+                      cis_smiles):
+    cis_nxyz = final_info_dict.get(cis_smiles, {}).get("cis", {}).get("nxyz")
+    trans_nxyz = final_info_dict.get(
+        cis_smiles, {}).get("trans", {}).get("nxyz")
+
+    if cis_nxyz is None and trans_nxyz is None:
+        return
+
+    substruc_idx = get_substruc_idx(template_smiles=TRANS_AZO,
+                                    smiles=cis_smiles)
+    react_idx = substruc_idx[4:6]
+
+    return react_idx, cis_nxyz, trans_nxyz
+
+
+def fix_t_isc(props_list,
+              final_info_dict,
+              cis_smiles):
+
+    sub_dic = final_info_dict[cis_smiles]
+
+    for props in props_list:
+        endpoint = props['endpoint']
+        endpoint_g = sub_dic[endpoint]['free_energy']
+        other_endpoint = 'cis' if endpoint == 'trans' else 'cis'
+        other_g = sub_dic[other_endpoint]['free_energy']
+
+        # if you're on the lower energy side, multiply k by 3 (because you're going
+        # from 3 triplets to one singlet)
+
+        if endpoint_g < other_g:
+            factor = 3
+        else:
+            factor = 2
+
+        if props.get('k_isc') is not None:
+            props['k_isc'] *= factor
+        if props.get('t_isc') is not None:
+            props['t_isc'] /= factor
+
+
+def make_isc_summary(isc_sub_dir,
+                     ts_dic,
+                     final_info_dict,
+                     cis_smiles):
+
+    isc_path = os.path.join(isc_sub_dir, 'triplet_opt.pickle')
+    if not os.path.isfile(isc_path):
+        return
+
+    info_path = os.path.join(isc_sub_dir, 'job_info.json')
+    if not os.path.isfile(info_path):
+        return
+
+    props_list = make_isc_props(isc_sub_dir)
+
+    for props in props_list:
+        if 's_t_gap' in props:
+            props.update({"s_t_gap_kcal": (props['s_t_gap'] *
+                                           const.AU_TO_KCAL['energy'])})
+
+        if not props['converged']:
+            continue
+
+        hess_keys = ['freeenergy', 'enthalpy', 'entropy']
+        if all([key in props for key in hess_keys]):
+            props['free_energy'] = props['freeenergy']
+            props.pop('freeenergy')
+
+        else:
+            # if a Hessian calculation wasn't done in the isc simulation, then inherit
+            # the rovibrational quantities from the TS
+
+            props['energy'] = props['singlet_energy']
+            base_keys = ['entropy',
+                         'free_energy',
+                         'enthalpy',
+                         'conf_entropy',
+                         'conf_free_energy']
+
+            for ts_key, ts_val in ts_dic.items():
+                if ts_key not in base_keys:
+                    continue
+                if ts_key in ['entropy', 'conf_entropy', 'conf_free_energy']:
+                    props[ts_key] = ts_val
+                else:
+                    delta = ts_val - ts_dic['energy']
+                    props[ts_key] = props['energy'] + delta
+
+    out = get_some_isc_info(final_info_dict=final_info_dict,
+                            cis_smiles=cis_smiles)
+    if out is None:
+        return props_list
+
+    react_idx, cis_nxyz, trans_nxyz = out
+    determine_triplet_side(props_list=props_list,
+                           react_idx=react_idx,
+                           cis_nxyz=cis_nxyz,
+                           trans_nxyz=trans_nxyz)
+
+    # divide by 2 or 3 depending on which side you're on
+    fix_t_isc(props_list=props_list,
+              final_info_dict=final_info_dict,
+              cis_smiles=cis_smiles)
+
+    for props in props_list:
+        if not props['converged']:
+            continue
+        isc_dg = get_effective_isc_dg(props=props)
+        props.update({"eff_free_energy": props['free_energy'] + isc_dg,
+                      "eff_entropy": props['entropy'] - isc_dg})
+    return props_list
+
+
+def summarize_all_isc(isc_dir,
+                      final_info_dict):
+
+    for i in os.listdir(isc_dir):
+        isc_sub_dir = os.path.join(isc_dir, i)
+        if not os.path.isdir(isc_sub_dir):
+            continue
+
+        info_path = os.path.join(isc_sub_dir, 'job_info.json')
+        with open(info_path, 'r') as f:
+            info = json.load(f)
+
+        cis_smiles = make_cis(info['smiles'])
+        mech = info['mechanism']
+        confnum = info['confnum']
+
+        ts_dics = []
+        for ts_list in final_info_dict[cis_smiles]['transition_states']:
+            for ts in ts_list:
+                this_mech = ts['mechanism']
+                this_confum = ts['confnum']
+
+                if this_mech == mech and this_confum == confnum:
+                    ts_dics.append(ts)
+
+        assert len(ts_dics) == 1, "Something has gone wrong"
+        ts_dic = ts_dics[0]
+        isc_summary = make_isc_summary(isc_sub_dir=isc_sub_dir,
+                                       ts_dic=ts_dic,
+                                       final_info_dict=final_info_dict,
+                                       cis_smiles=cis_smiles)
+        if 's_t_crossing' not in ts_dic:
+            ts_dic['s_t_crossing'] = []
+        ts_dic['s_t_crossing'] += isc_summary
+
+
+def get_min_st_dics(mech_results_dic,
+                    sub_dic):
+
+    s_t_crossing_dics = mech_results_dic.get('s_t_crossing')
+    if not s_t_crossing_dics:
+        return
+    use_dics = [i for i in s_t_crossing_dics if i]
+    if not use_dics:
+        return
+
+    eff_g_list = []
+    for dic_list in use_dics:
+        end_keys = [dic['endpoint'] for dic in dic_list]
+        endpoint_g_list = [sub_dic[end_key]['free_energy'] for
+                           end_key in end_keys]
+
+        # eff_g on the side closer to the reactant
+        idx = np.argmin(endpoint_g_list)
+        eff_g = dic_list[idx]['delta_eff_free_energy']
+        eff_g_list.append(eff_g)
+
+    argmin = np.argmin(eff_g_list)
+    min_g_dics = use_dics[argmin]
+
+    return min_g_dics
 
 
 def make_summary(final_info_dict):
@@ -1149,56 +1465,40 @@ def make_summary(final_info_dict):
             return
 
         summary = sub_dic['summary']
-        for end_key, mech_results in mech_result_dic.items():
+        for end_key, mech_results_dic in mech_result_dic.items():
+            mech_results = mech_results_dic['ts']
             min_g_dic = sorted(mech_results,
                                key=lambda x: x['delta_free_energy'])[0]
             if end_key not in summary:
                 summary[end_key] = {}
             summary[end_key]['singlet_barrier'] = min_g_dic
 
+            min_st_dics = get_min_st_dics(mech_results_dic=mech_results_dic,
+                                          sub_dic=sub_dic)
+
+            summary[end_key]['s_t_crossing'] = min_st_dics
+
 
 def summarize(base_dir,
               dir_info):
-    # ['transition_states', 'product', 'done',
-    # 'results_by_mechanism', 'summary']
-
-    # to add to `transition_states`: ['s_t_crossing']
 
     final_info_dict = {}
     summarize_all_ts(ts_dir=dir_info['evf'],
                      final_info_dict=final_info_dict)
+
+    # needs to be before isc so we can figure out which side each one is on
     summarize_endpoints(hess_dir=dir_info['hessian'],
                         final_info_dict=final_info_dict)
+    summarize_all_isc(isc_dir=dir_info['triplet_crossing'],
+                      final_info_dict=final_info_dict)
+
+    # add `s_t_crossing` to each of these
     make_results_by_mech(final_info_dict=final_info_dict)
+    update_mech_w_isc(final_info_dict=final_info_dict)
+
     make_summary(final_info_dict=final_info_dict)
 
     final_info_dict = filter_by_done(final_info_dict=final_info_dict)
-
-    # `results_by_mechanism['product']`:
-    # ['delta_free_energy_s_t_crossing',
-    #  's_t_crossing_geom_ids',
-    #  'eff_delta_free_energy_s_t_crossing',
-    #  's_t_crossing_endpoints',
-    #  's_t_crossing_t_isc',
-    #  'delta_energy_s_t_crossing',
-    #  'delta_entropy_j_mol_k',
-    #  'delta_entropy_s_t_crossing',
-    #  'delta_enthalpy_s_t_crossing']
-
-    # `summary['product']`: ['s_t_crossing', 'singlet_barrier']
-
-    # `summary['product']['s_t_crossing']:
-    # ['delta_free_energy',
-    #  'geom_ids',
-    #  'eff_delta_free_energy',
-    #  'endpoints',
-    #  't_isc',
-    #  'delta_energy',
-    #  'delta_entropy',
-    #  'delta_enthalpy',
-    #  'mechanism',
-    #  'delta_free_energy_no_conf',
-    #  'eff_delta_free_energy_no_conf']
 
     return final_info_dict
 

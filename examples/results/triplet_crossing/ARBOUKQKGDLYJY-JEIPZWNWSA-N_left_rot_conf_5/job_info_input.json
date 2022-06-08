@@ -457,7 +457,7 @@
             -4.891062259674072
         ]
     ],
-    "nnid": null,
+    "nnid": "",
     "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet/0",
     "num_parallel": 4,
     "triplet_params": {
