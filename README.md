@@ -6,7 +6,7 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 ## Conda environment
 
-We recommend creating a conda(https://conda.io/docs/index.html) environment to run the code. You can learn more about managing anaconda environments by reading [this page](http://conda.pydata.org/). To create the environment, use the following commands:
+We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing anaconda environments by reading [this page](http://conda.pydata.org/). To create the environment, use the following commands:
 
 ```bash
 conda upgrade conda
@@ -15,7 +15,7 @@ conda env create -f environment.yml
 
 Next, download the [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository, which is also managed by our group. You can either install it through `pip`, or clone it and put the folder in your path (see below). We recommend the latter, since NFF is under constant development, and often needs to be pulled from github when changes are made.
 
-Lastly, put the `azo_barriers` repository in your path by adding the following lines to ~/.bashrc (linux) or ~/.bash_profile (mac):
+Lastly, put the `azo_barriers` repository (and possibly NFF) in your path by adding the following lines to `~/.bashrc` (linux) or `~/.bash_profile` (mac):
 
 ```
 # add the `azo_barriers` path
@@ -27,3 +27,22 @@ export NFFDIR=<path to NFF>
 export PYTHONPATH=$NFFDIR:$PYTHONPATH
 ```
 
+## Examples
+
+An example calculation can be found in the `examples` folder. To test it out, run the following code in the command line:
+```
+cd examples
+./run.sh
+```
+This should produce a series of calculations for two different molecules. The calculations include:
+- Initial 3D structure generation through RDKit
+- 4 relaxed scans per molecule to generate 4 possible transition states (TSs) of different mechanisms
+- Metadynamics-based conformer generation to generate reactant, product, and TS conformers 
+- Eigenvector following to optimize the TSs
+- Hessian calculations on the optimized reactants and products
+- Singlet-triplet minimum energy crossing point search
+- Intrinsic reaction coordinate generation for the optimized TSs
+
+To run this calculation for your own molecule, simply edit the file `examples/job_info.json`. You can set the directory of your singlet NN model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the list of molecules you want to simulate (`smiles_list`; you only need to provide one cis or trans SMILES per molecule), the device you want to use (`cpu` if you have no GPUs, or an index of the number GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
+
+The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tutorials) show how to load, visualize, and interpret the results (see below). They also go into some detail about other parameters you can specify in `job_info.json`
