@@ -49,4 +49,4 @@ To run this for your own molecules, simply supply their SMILES strings in the fi
 ````
 Note that you only need to provide one cis or trans SMILES per molecule. You can also set the directory of your singlet neural network model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the device you want to use (`cpu` if you have no GPUs, or the index of the GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
 
-The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tutorials) show how to load, visualize, and interpret the results. They also go into some detail about other parameters you can specify in `job_info.json`
+The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load, visualize, and interpret the results. They also go into some detail about other parameters you can specify in `job_info.json`
