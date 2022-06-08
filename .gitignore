@@ -4,6 +4,6 @@ __pycache__
 */full_workflow/testing/summary.pickle
 django-debug.log
 jobdirparser.log
-examples/results
+# examples/results
 # examples/summary.pickle
 

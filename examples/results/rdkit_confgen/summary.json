@@ -1,0 +1,42 @@
+{
+    "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N\\c2ccccc2)c1)C(F)(F)F": {
+        "totalconfs": 26,
+        "uniqueconfs": 26,
+        "temperature": 298.15,
+        "lowestenergy": 0.2846877644273217,
+        "poplowestpct": 56.87599729539146,
+        "charge": 0,
+        "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N\\c2ccccc2)c1)C(F)(F)F",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/SLNIZFKCXJHOIU-KTMFPKCZSA-N.pickle"
+    },
+    "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F": {
+        "totalconfs": 6,
+        "uniqueconfs": 6,
+        "temperature": 298.15,
+        "lowestenergy": 0.27188149010646767,
+        "poplowestpct": 99.8026668717626,
+        "charge": 0,
+        "smiles": "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/SLNIZFKCXJHOIU-NVQSTNCTSA-N.pickle"
+    },
+    "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N\\c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1": {
+        "totalconfs": 1,
+        "uniqueconfs": 1,
+        "temperature": 298.15,
+        "lowestenergy": 0.3970586902949405,
+        "poplowestpct": 100.0,
+        "charge": 0,
+        "smiles": "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N\\c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/ARBOUKQKGDLYJY-YHZPTAEISA-N.pickle"
+    },
+    "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N/c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1": {
+        "totalconfs": 9,
+        "uniqueconfs": 9,
+        "temperature": 298.15,
+        "lowestenergy": 0.38558614728687685,
+        "poplowestpct": 76.3850754922829,
+        "charge": 0,
+        "smiles": "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N/c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/ARBOUKQKGDLYJY-JEIPZWNWSA-N.pickle"
+    }
+}

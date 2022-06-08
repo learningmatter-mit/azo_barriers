@@ -1,0 +1,40 @@
+[ 0.        +458.52156762j  0.          +2.72490151j
+  0.          +2.09750245j  0.          +1.69703522j
+  0.          +1.18215028j  0.          +1.09104342j
+  0.          +0.61447171j 11.63067101  +0.j
+ 13.81003564  +0.j         21.85513002  +0.j
+ 26.48314617  +0.j         30.49161451  +0.j
+ 39.12312154  +0.j         43.8594246   +0.j
+ 46.8585629   +0.j         57.33601634  +0.j
+ 60.25097924  +0.j         68.65268312  +0.j
+ 72.40312414  +0.j         82.28677096  +0.j        ]
+Entropy components at T = 298.15 K and P = 101325.0 Pa:
+=================================================
+                           S               T*S
+S_trans (1 bar)    0.0019477 eV/K        0.581 eV
+S_rot              0.0016535 eV/K        0.493 eV
+S_elec             0.0000000 eV/K        0.000 eV
+S_vib              0.0068303 eV/K        2.036 eV
+S (1 bar -> P)    -0.0000011 eV/K       -0.000 eV
+-------------------------------------------------
+S                  0.0104304 eV/K        3.110 eV
+=================================================
+Enthalpy components at T = 298.15 K:
+===============================
+E_pot                 -2.571 eV
+E_ZPE                 17.393 eV
+Cv_trans (0->T)        0.039 eV
+Cv_rot (0->T)          0.039 eV
+Cv_vib (0->T)          0.969 eV
+(C_v -> C_p)           0.026 eV
+-------------------------------
+H                     15.894 eV
+===============================
+Generating initial displacements from TS... 
+Generated displacements!
+Generating forward IRC path
+IRC converged after 34 steps!
+Generating backward IRC path
+IRC converged after 16 steps!
+IRC saved to ./irc.pickle
+Neural IRC terminated normally.

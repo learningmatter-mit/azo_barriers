@@ -1,0 +1,12 @@
+{
+    "weightpath": "../models/singlet/0",
+    "triplet_weightpath": "../models/triplet/0",
+    "device": 2,
+    "rdkit_confgen": {},
+    "relaxed_scan": {},
+    "confgen": {},
+    "evf": {},
+    "hessian": {},
+    "irc": {},
+    "triplet_crossing": {}
+}
