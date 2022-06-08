@@ -5,5 +5,5 @@ __pycache__
 django-debug.log
 jobdirparser.log
 examples/results
-examples/summary.pickle
+# examples/summary.pickle
 
