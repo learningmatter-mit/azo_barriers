@@ -221,7 +221,7 @@ def make_atoms_batch(calculator,
     positions = np.concatenate([i.get_positions()
                                 for i in images])
     cells = np.array([i.get_cell()
-                        for i in images])
+                      for i in images])
 
     trimmed_kwargs = {key: val for key, val in atoms_kwargs.items()
                       if key != 'nbr_update_period'}
@@ -337,19 +337,19 @@ def get_images(params):
             reactantlattice = params['reactantlattice']
             productlattice = params['productlattice']
             reactant = Atoms(reactantnxyz[:, 0],
-                        positions=reactantnxyz[:, 1:],
-                        cell=reactantlattice,
-                        pbc=True)
+                             positions=reactantnxyz[:, 1:],
+                             cell=reactantlattice,
+                             pbc=True)
             product = Atoms(productnxyz[:, 0],
-                        positions=productnxyz[:, 1:],
-                        cell=productlattice,
-                        pbc=True)
-            
+                            positions=productnxyz[:, 1:],
+                            cell=productlattice,
+                            pbc=True)
+
         else:
             reactant = Atoms(reactantnxyz[:, 0],
-                        positions=reactantnxyz[:, 1:])
+                             positions=reactantnxyz[:, 1:])
             product = Atoms(productnxyz[:, 0],
-                        positions=productnxyz[:, 1:])
+                            positions=productnxyz[:, 1:])
 
         num_images = params["neb_params"]["num_images"]
         images = [reactant]
@@ -376,9 +376,9 @@ def get_images(params):
             for coords, lattice in zip(coord_set, lattice_set):
                 nxyz = coords_to_xyz(coords=coords).astype('float')
                 atoms = Atoms(nxyz[:, 0],
-                            positions=nxyz[:, 1:],
-                            cell=lattice,
-                            pbc=True)
+                              positions=nxyz[:, 1:],
+                              cell=lattice,
+                              pbc=True)
                 images.append(atoms)
         else:
             images = []
@@ -386,7 +386,7 @@ def get_images(params):
             for coords in coord_set:
                 nxyz = coords_to_xyz(coords=coords).astype('float')
                 atoms = Atoms(nxyz[:, 0],
-                            positions=nxyz[:, 1:])
+                              positions=nxyz[:, 1:])
                 images.append(atoms)
 
     return images
@@ -516,6 +516,11 @@ def load_params(file):
     if "details" in info:
         info.update(info["details"])
         info.pop("details")
+
+    for key in ['atoms_kwargs', 'ev_kwargs', "calc_kwargs"]:
+        sub_dic = info.get(key)
+        if isinstance(sub_dic, dict):
+            sub_dic.update({"device": info['device']})
 
     return info
 

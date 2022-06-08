@@ -15,11 +15,9 @@
         "cutoff_skin": 2.0,
         "nbr_update_period": 1,
         "directed": true,
-        "device": 0,
         "requires_large_offsets": false
     },
     "calc_kwargs": {
-        "device": 0,
         "en_key": "energy_0",
         "properties": [
             "energy",

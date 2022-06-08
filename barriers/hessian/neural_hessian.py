@@ -3,8 +3,7 @@ from neuralnet.utils.barriers.evf import get_atoms, to_json
 import json
 import argparse
 from rdkit import Chem
-from barriers.utils.neuraloptimizer import get_params
-from barriers.utils.ase_neb import get_calc_kwargs
+from barriers.utils.ase_neb import get_calc_kwargs, load_params
 from nff.io.ase import NeuralFF
 from nff.utils import constants as const
 
@@ -56,5 +55,5 @@ if __name__ == "__main__":
                         help="file containing all parameters")
 
     args = parser.parse_args()
-    params = get_params(info_file=args.info_file)
+    params = load_params(file=args.info_file)
     main(params)

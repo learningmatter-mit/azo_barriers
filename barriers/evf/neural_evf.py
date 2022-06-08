@@ -192,7 +192,10 @@ def main():
     args = parser.parse_args()
 
     params = load_params(file=args.info_file)
-
+    
+    with open("/home/saxelrod/Repo/projects/azo_barriers/examples/param.json", 'w') as f:
+        json.dump(params, f, indent=4)
+        
     run_from_params(params)
 
 
