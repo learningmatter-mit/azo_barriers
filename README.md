@@ -13,6 +13,11 @@ conda upgrade conda
 conda env create -f environment.yml
 ```
 
+To ensure that the `barriers` environment is accessible through Jupyter, add the the `barriers` display name:
+```bash
+python -m ipykernel install --user --name barriers --display-name "Python [conda env:barriers"]
+```
+
 Next, download the [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository, which is also managed by our group. You can either install it through `pip`, or clone it and put the folder in your path (see below). We recommend the latter, since NFF is under constant development, and often needs to be pulled from github when changes are made.
 
 Lastly, put the `azo_barriers` repository (and possibly NFF) in your path by adding the following lines to `~/.bashrc` (linux) or `~/.bash_profile` (mac):
