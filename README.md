@@ -32,7 +32,7 @@ export NFFDIR=<path to NFF>
 export PYTHONPATH=$NFFDIR:$PYTHONPATH
 ```
 ## Tutorials
-[Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data, which can be found [here](https://doi.org/10.18126/unc8-336t). They also show how to do the same for any data you may generate yourself. To learn how to generate your own data, see the next section in this document.
+[Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data, which can be found [here](https://doi.org/10.18126/unc8-336t). They also show how to do the same for any data you may generate yourself. To learn how to generate your own data, see the **Examples** section in this document.
 
 ## Examples
 
