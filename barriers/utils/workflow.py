@@ -132,6 +132,11 @@ def load_rdkit_confgen(rd_dir,
     return info_list
 
 
+def add_base(base_info, new_info, key):
+    if base_info.get(key) is not None:
+        new_info.update(base_info[key])
+
+
 def make_scan_info_list(rd_dir,
                         base_info):
     info_list = load_rdkit_confgen(rd_dir=rd_dir,
@@ -140,6 +145,7 @@ def make_scan_info_list(rd_dir,
     for info in info_list:
         for constraints in MECH_CONSTRAINTS:
             new_info = copy.deepcopy(base_info)
+            add_base(base_info, new_info, key='rdkit_confgen')
             new_info.update(info)
             new_info.update({"end_constraints": {"hookean": constraints}})
 
@@ -238,6 +244,7 @@ def make_confgen_info_list(base_info,
         inherit_keys = ['smiles', 'inchikey', 'mechanism']
 
         new_info = copy.deepcopy(base_info)
+        add_base(base_info, new_info, key='confgen')
         new_info.update({key: old_info[key] for key in inherit_keys})
         new_info.update({'nxyz': nxyz,
                          'fixed_atoms': AZO_FIXED_ATOMS,
@@ -407,6 +414,7 @@ def make_evf_info_list(base_info,
             inherit_keys = ['smiles', 'inchikey', 'mechanism']
 
             new_info = copy.deepcopy(base_info)
+            add_base(base_info, new_info, key='evf')
             new_info.update({key: old_info[key] for key in inherit_keys})
             new_info.update({'nxyz': nxyz,
                              'confnum': confnum})
@@ -496,6 +504,7 @@ def make_hess_info_list(base_info,
             inherit_keys = ['smiles', 'inchikey']
 
             new_info = copy.deepcopy(base_info)
+            add_base(base_info, new_info, key='hessian')
             new_info.update({key: old_info[key] for key in inherit_keys})
             new_info.update({'nxyz': nxyz,
                              'confnum': confnum})
@@ -549,10 +558,11 @@ def confgen_to_hessian_dirs(confgen_dir,
 
 def make_irc_info_list(base_info,
                        evf_dir,
+                       base_key='irc',
                        mech_key=None):
 
     folders = [os.path.join(evf_dir, i) for i in os.listdir(evf_dir)]
-    confs_per_ts = base_info.get("irc", {}).get("confs_per_ts")
+    confs_per_ts = base_info.get(base_key, {}).get("confs_per_ts")
     if confs_per_ts is None:
         confs_per_ts = 1
 
@@ -589,6 +599,7 @@ def make_irc_info_list(base_info,
         inherit_keys = ['smiles', 'inchikey', 'mechanism', 'confnum']
 
         new_info = copy.deepcopy(base_info)
+        add_base(base_info, new_info, key=base_key)
         new_info.update({key: old_info[key] for key in inherit_keys})
         new_info.update({'nxyz': dic['nxyz'],
                          'freeenergy': dic['freeenergy']})
@@ -665,7 +676,8 @@ def make_triplet_info_list(base_info,
 
     results = make_irc_info_list(base_info=base_info,
                                  evf_dir=evf_dir,
-                                 mech_key='rot')
+                                 mech_key='rot',
+                                 base_key='triplet_crossing')
 
     return results
 
@@ -867,8 +879,15 @@ def run_irc(dir_info,
 
 
 def run_simulations(**kwargs):
-    funcs = [run_rdkit, run_relaxed_scan, run_confgen, run_hess,
-             run_evf, run_triplet, run_irc]
+    funcs = [
+        run_rdkit,
+        run_relaxed_scan,
+        run_confgen,
+        run_hess,
+        run_evf,
+        run_triplet,
+        run_irc
+    ]
 
     for func in funcs:
         func(**kwargs)
@@ -948,7 +967,7 @@ def make_cis(smiles):
     nn_bond_pairs = [[i, b] for i, b in enumerate(new_mol.GetBonds()) if
                      bond_idx_match(bond=b, idx=nn_idx)]
     if len(nn_bond_pairs) != 1:
-        print(("Problem finding the N=N bond in the azobenzene subtstructure "
+        print(("Problem finding the N=N bond in the azobenzene substructure "
                "of smiles %s. Skipping" % smiles))
         return
 
@@ -1150,15 +1169,15 @@ def make_mech_ts_summary(ts_dic,
         ts_summary[new_key] = (ts_summary[key] * ENTROPY_CONV)
         ts_summary.pop(key)
 
-    ts_summary.update({"endpoint_conf_g": end_dic.get("conf_free_energy"),
-                       "ts_conf_g": ts_dic.get("conf_free_energy")})
+    ts_summary.update({"endpoint_conf_free_energy": end_dic.get("conf_free_energy"),
+                       "ts_conf_free_energy": ts_dic.get("conf_free_energy")})
     for key in ['mechanism', 'confnum']:
         if ts_dic.get(key) is not None:
             ts_summary.update({key: ts_dic[key]})
 
-    for key in ['endpoint_conf_g', 'ts_conf_g']:
-        if ts_summary.get(key) is not None:
-            ts_summary[key] *= const.AU_TO_KCAL['energy']
+    # for key in ['endpoint_conf_free_energy', 'ts_conf_free_energy']:
+    #     if ts_summary.get(key) is not None:
+    #         ts_summary[key] *= const.AU_TO_KCAL['energy']
 
     return ts_summary
 
@@ -1492,7 +1511,6 @@ def summarize(base_dir,
     summarize_all_isc(isc_dir=dir_info['triplet_crossing'],
                       final_info_dict=final_info_dict)
 
-    # add `s_t_crossing` to each of these
     make_results_by_mech(final_info_dict=final_info_dict)
     update_mech_w_isc(final_info_dict=final_info_dict)
 
