@@ -6,4 +6,4 @@ django-debug.log
 jobdirparser.log
 # examples/results
 # examples/summary.pickle
-
+*/.ipynb_checkpoints
