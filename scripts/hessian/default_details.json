@@ -24,6 +24,5 @@
     "pressure": 101325,
     "imag_cutoff": 0,
     "rotor_cutoff": 50,
-    "iroot": 0,
     "confs_per_endpoint": 1
 }

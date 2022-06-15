@@ -23,8 +23,6 @@
     "adapt_scale_disp": true,
     "scale_displ_sd": 0.01,
     "alpha_kcal": 12.55,
-    "crossing_scale_displ_sd": 0.0005,
-    "crossing_max_steps": 500,
     "opt_type": "BFGS",
     "fmax": 0.005,
     "opt_max_step": 1500,

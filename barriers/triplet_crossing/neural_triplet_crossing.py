@@ -598,34 +598,6 @@ def run_until_crossing(g0_nxyz,
     return trj, singlet_ens, triplet_ens, found_triplet
 
 
-def implicit_opt_gap(trj,
-                     params,
-                     en_func,
-                     triplet_en_func):
-
-    print("Re-running with smaller steps to get exact crossing...")
-    remain_params = {key: val for key, val in params.items()
-                     if key not in ['scale_displ_sd', 'max_steps']}
-
-    new_trj, singlet_ens, triplet_ens, _ = run_until_crossing(
-        g0_nxyz=back_convert_irc([trj[-2]])[0],
-        scale_displ_sd=params["crossing_scale_displ_sd"],
-        max_steps=params["crossing_max_steps"],
-        en_func=en_func,
-        triplet_en_func=triplet_en_func,
-        **remain_params)
-
-    gap = abs(np.array(singlet_ens) - np.array(triplet_ens))
-    argmin = np.argmin(gap)
-    last_xyz = new_trj[argmin]
-
-    opt_atoms = Atoms(numbers=last_xyz[:, 0],
-                      positions=last_xyz[:, 1:])
-    singlet_en = singlet_ens[-1]
-    triplet_en = triplet_ens[-1]
-
-    return opt_atoms, singlet_en, triplet_en
-
 
 def run_opt(params, atoms):
     opt_kwargs = {key: val for key,
