@@ -18,7 +18,10 @@ from nff.io.ase import AtomsBatch
 from barriers.utils.neuraloptimizer import (init_calculator, coords_to_xyz, opt_conformer,
                                             add_all_constraints, translate_template,
                                             get_model)
+
 from barriers.confgen.neural_confgen import report_time
+from barriers.utils.ase_neb import load_params
+
 
 OPT_FILENAME = "opt.traj"
 
@@ -532,9 +535,7 @@ def main():
                         help=("Name of file with details for the job"),
                         default='job_info.json')
     args = parser.parse_args()
-
-    with open(args.info_file, 'r') as f:
-        params = json.load(f)
+    params = load_params(args.info_file)
 
     combine_params(params)
     update_params(params)

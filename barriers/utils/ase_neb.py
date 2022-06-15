@@ -506,6 +506,24 @@ def load_defaults():
     return info
 
 
+def make_abs_paths(obj):
+    if isinstance(obj, str):
+        if ('../' in obj or './' in obj) and not (obj.startswith("/")):
+            obj = os.path.join(os.getcwd(), obj)
+
+    elif isinstance(obj, list):
+        for i, sub_obj in enumerate(obj):
+            new_sub_obj = make_abs_paths(sub_obj)
+            obj[i] = new_sub_obj
+
+    elif isinstance(obj, dict):
+        for key, val in obj.items():
+            new_val = make_abs_paths(val)
+            obj[key] = new_val
+
+    return obj
+
+
 def load_params(file):
     # info = load_defaults()
     info = {}
@@ -521,6 +539,8 @@ def load_params(file):
         sub_dic = info.get(key)
         if isinstance(sub_dic, dict):
             sub_dic.update({"device": info['device']})
+
+    info = make_abs_paths(obj=info)
 
     return info
 

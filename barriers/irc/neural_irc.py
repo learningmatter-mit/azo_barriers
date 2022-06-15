@@ -19,6 +19,7 @@ from nff.data import collate_dicts, Dataset
 from nff.io.ase import UNDIRECTED, NeuralFF, AtomsBatch
 
 from barriers.utils.vib import hessian_and_modes
+from barriers.utils.ase_neb import load_params
 
 PERIODICTABLE = Chem.GetPeriodicTable()
 EPS = 1e-15
@@ -1080,7 +1081,7 @@ def neural_from_file(job_dir,
 
     # load some info needed for the main function
 
-    info = load_info(info_path)
+    info = load_params(info_path)
     if 'nxyz' in info:
         ts_nxyz = np.array(info['nxyz'])
     else:

@@ -18,8 +18,9 @@ from barriers.utils.vib import (vib_analy, convert_modes, mrrho_quants, AMU2KG, 
                                 BOHR_RADIUS)
 from barriers.irc.neural_irc import (take_step, make_en_func, get_model_path,
                                      coords_to_nxyz, get_modes, init_displace,
-                                     load_info, load_model, convert_irc,
+                                     load_model, convert_irc,
                                      back_convert_irc, COMPLETION_MESSAGE)
+from barriers.utils.ase_neb import load_params
 
 EV_TO_J = 1.602101e-19
 ANGS_TO_M = 1e-10
@@ -904,7 +905,7 @@ def run_all(params, job_dir):
 
 
 def load_and_modify(info_path):
-    info = load_info(info_path)
+    info = load_params(info_path)
     model_keys = ["en_key", "model_kwargs", "nnid",
                   "weightpath", "cutoff"]
 

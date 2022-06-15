@@ -1,30 +1,30 @@
 {
     "CCN(CC)c1ccc(/N=N\\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1": {
-        "totalconfs": 8,
-        "uniqueconfs": 8,
+        "totalconfs": 11,
+        "uniqueconfs": 11,
         "temperature": 298.15,
-        "lowestenergy": 0.2566343055376472,
-        "poplowestpct": 82.22784270843975,
+        "lowestenergy": 0.2560314191646775,
+        "poplowestpct": 81.87810857237714,
         "charge": 1,
         "smiles": "CCN(CC)c1ccc(/N=N\\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1",
         "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/CAMFOMFEKZVSBT-UHFFFAOYSA-O.pickle"
     },
     "CCN(CC)c1ccc(/N=N/c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1": {
-        "totalconfs": 12,
-        "uniqueconfs": 12,
+        "totalconfs": 1,
+        "uniqueconfs": 1,
         "temperature": 298.15,
-        "lowestenergy": 0.24350839686442058,
-        "poplowestpct": 56.85948485294839,
+        "lowestenergy": 0.2311570729114162,
+        "poplowestpct": 100.0,
         "charge": 1,
         "smiles": "CCN(CC)c1ccc(/N=N/c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1",
         "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/CAMFOMFEKZVSBT-UHFFFAOYSA-O.pickle"
     },
     "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N\\c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1": {
-        "totalconfs": 15,
-        "uniqueconfs": 15,
+        "totalconfs": 12,
+        "uniqueconfs": 12,
         "temperature": 298.15,
-        "lowestenergy": 0.40694518618574665,
-        "poplowestpct": 59.00074727687002,
+        "lowestenergy": 0.40550873655602704,
+        "poplowestpct": 97.56389223998164,
         "charge": 0,
         "smiles": "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N\\c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1",
         "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/ARBOUKQKGDLYJY-YHZPTAEISA-N.pickle"
@@ -33,8 +33,8 @@
         "totalconfs": 2,
         "uniqueconfs": 2,
         "temperature": 298.15,
-        "lowestenergy": 0.3793213709758483,
-        "poplowestpct": 99.87194036217316,
+        "lowestenergy": 0.37628472942341684,
+        "poplowestpct": 99.75381618677365,
         "charge": 0,
         "smiles": "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N/c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1",
         "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/ARBOUKQKGDLYJY-JEIPZWNWSA-N.pickle"

@@ -1,6 +1,6 @@
 {
-    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet/0",
-    "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/triplet/0",
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/singlet/0",
+    "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/triplet/0",
     "device": 2,
     "rdkit_confgen": {},
     "relaxed_scan": {},

@@ -35,7 +35,7 @@ from barriers.utils.neuraloptimizer import (translate_template,
                                             update_with_exclude)
 
 from barriers.confgen.neural_confgen import (update_params,
-                                             get_params,
+                                             load_params,
                                              JSON_KEYS,
                                              parse_args,
                                              ARGS_PATH,
@@ -401,7 +401,7 @@ def load_all_params(base_dir,
 
         file = os.path.join(sub_folder, 'job_info.json')
         params = copy.deepcopy(args.__dict__)
-        params.update(get_params(info_file=file))
+        params.update(load_params(file=file))
 
         for key in JSON_KEYS:
             val = params.get(key)

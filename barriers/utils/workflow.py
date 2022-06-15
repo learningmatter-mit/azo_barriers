@@ -22,6 +22,7 @@ from nff.utils import constants as const
 from barriers.confgen.neural_confgen import atoms_to_nxyz
 from barriers.utils.neuraloptimizer import get_substruc_idx
 from barriers.utils.parse import make_isc_props
+from barriers.utils.ase_neb import load_params
 
 ANGLE_CONSTRAINTS = {'constrain_rot': {
     "idx": [[3, 4, 5], [4, 5, 6]],
@@ -1654,9 +1655,7 @@ def summarize(base_dir,
 
 def run_all(base_dir):
     info_path = os.path.join(base_dir, 'job_info.json')
-    with open(info_path, 'r') as f:
-        base_info = json.load(f)
-
+    base_info = load_params(info_path)
     dir_info = make_all_subdirs(base_dir=base_dir)
     kwargs = {"dir_info": dir_info,
               "base_info": base_info,

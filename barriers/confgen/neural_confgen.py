@@ -30,10 +30,10 @@ from barriers.utils.neuraloptimizer import (md_to_conf,
                                             params_to_atoms,
                                             reset_h_mass,
                                             get_trj_file,
-                                            get_params,
                                             get_model,
                                             OPT_FILENAME,
                                             EN_PATH)
+from barriers.utils.ase_neb import load_params
 
 from barriers.utils.neuraloptimizer import confs_to_opt as base_opt
 
@@ -937,7 +937,7 @@ def parse():
         if not os.path.isfile(info_file):
             raise Exception(("Can't find the requested info "
                              "file %s" % info_file))
-        these_params = get_params(info_file=args.info_file)
+        these_params = load_params(file=args.info_file)
         set_mtd_time(info_file=info_file,
                      params=these_params)
         params.update(these_params)
