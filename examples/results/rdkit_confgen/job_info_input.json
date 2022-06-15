@@ -1,12 +1,23 @@
 {
-    "weightpath": "../models/singlet/0",
-    "triplet_weightpath": "../models/triplet/0",
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet/0",
+    "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/triplet/0",
     "device": 2,
     "rdkit_confgen": {},
     "relaxed_scan": {},
-    "confgen": {},
-    "evf": {},
-    "hessian": {},
-    "irc": {},
-    "triplet_crossing": {}
+    "confgen": {
+        "num_parallel": 10,
+        "num_in_chunk": 100
+    },
+    "evf": {
+        "num_parallel": 1
+    },
+    "hessian": {
+        "num_parallel": 2
+    },
+    "irc": {
+        "num_parallel": 1
+    },
+    "triplet_crossing": {
+        "num_parallel": 1
+    }
 }

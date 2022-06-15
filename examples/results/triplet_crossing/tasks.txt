@@ -1,4 +1,0 @@
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/triplet_crossing/ARBOUKQKGDLYJY-JEIPZWNWSA-N_left_rot_conf_5 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/triplet_crossing/SLNIZFKCXJHOIU-NVQSTNCTSA-N_right_rot_conf_1 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/triplet_crossing/SLNIZFKCXJHOIU-NVQSTNCTSA-N_left_rot_conf_5 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/triplet_crossing/ARBOUKQKGDLYJY-JEIPZWNWSA-N_right_rot_conf_2 && bash job.sh && cd - 

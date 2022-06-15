@@ -893,12 +893,23 @@ def run_simulations(**kwargs):
         func(**kwargs)
 
 
-def get_conf_g(confgen_sub_dir):
+def conf_g_from_many(dirs,
+                     dic_w_ens):
 
-    path = os.path.join(confgen_sub_dir, 'final_opt.traj')
-    trj = Trajectory(path)
-    ens = np.array([float(i.get_potential_energy()) for i in trj])
+    ens = []
+    for direc in dirs:
+        if direc in dic_w_ens:
+            these_ens = dic_w_ens[direc]
+        else:
+            path = os.path.join(direc, 'final_opt.traj')
+            trj = Trajectory(path)
+            these_ens = np.array([float(i.get_potential_energy())
+                                  for i in trj]).tolist()
+            dic_w_ens[direc] = these_ens
 
+        ens += these_ens
+
+    ens = np.array(ens)
     kt = KB_HA * TEMP
     rel_ens = (ens - min(ens)) * const.EV_TO_AU
     p = np.exp(-rel_ens / kt)
@@ -906,23 +917,79 @@ def get_conf_g(confgen_sub_dir):
 
     conf_s = KB_HA * (-p * np.log(p)).sum()
     delta_mean_e = (rel_ens * p).sum()
-    conf_g = -TEMP * conf_s + delta_mean_e
+    conf_g = -TEMP * conf_s
 
-    return conf_g
+    return conf_g, delta_mean_e
+
+
+def get_confgen_dirs(direc):
+    if 'endpoint' in direc:
+        return [direc]
+
+    base_dir = "/".join(direc.split("/")[:-1])
+    base_name = "_".join(direc.split("_")[:-2])
+
+    all_dirs = []
+    for i in os.listdir(base_dir):
+        folder = os.path.join(base_dir, i)
+        if 'endpoint' in folder:
+            continue
+        if not os.path.isdir(folder):
+            continue
+        if base_name not in folder:
+            continue
+        all_dirs.append(folder)
+
+    return all_dirs
+
+
+def get_conf_g(confgen_sub_dir,
+               dic_w_ens):
+
+    conf_g, de = conf_g_from_many(dirs=[confgen_sub_dir],
+                                  dic_w_ens=dic_w_ens)
+    confgen_dirs = get_confgen_dirs(direc=confgen_sub_dir)
+    total_conf_g, total_de = conf_g_from_many(dirs=confgen_dirs,
+                                              dic_w_ens=dic_w_ens)
+
+    results = {"conf_g": conf_g,
+               "total_conf_g": total_conf_g,
+               "de": de,
+               "total_de": total_de}
+
+    return results
 
 
 def update_w_conf_g(conf_g,
+                    de,
+                    total_conf_g,
+                    total_de,
                     dic):
 
-    dic.update({"free_energy": dic['free_energy'] + conf_g,
-                "conf_free_energy": conf_g,
-                # "free_energy_no_conf": dic['free_energy'],
-                "entropy": dic['entropy'] - conf_g,
-                "vib_entropy": dic['entropy'],
-                "conf_entropy": -conf_g})
+    free_en = copy.deepcopy(dic['free_energy'])
+    enthalpy = copy.deepcopy(dic['enthalpy'])
+    vib_entropy = copy.deepcopy(dic['entropy'])
+
+    prefix = 'ts_specific'
+
+    dic.update({"%s_conf_free_energy" % prefix: conf_g,
+                "%s_avg_conf_energy" % prefix: de,
+                "%s_conf_entropy" % prefix: -conf_g,
+                "%s_entropy" % prefix: vib_entropy - conf_g,
+                "%s_free_energy" % prefix: free_en + conf_g + de,
+                "%s_enthalpy" % prefix: enthalpy + de})
+
+    dic.update({"conf_free_energy": total_conf_g,
+                "avg_conf_energy": total_de,
+                "conf_entropy": - total_conf_g,
+                "vib_entropy": vib_entropy,
+                "entropy": vib_entropy - total_conf_g,
+                "free_energy": free_en + total_conf_g + total_de,
+                "enthalpy": enthalpy + total_de})
 
 
-def make_ts_summary(ts_sub_dir):
+def make_ts_summary(ts_sub_dir,
+                    dic_w_ens):
 
     ts_path = os.path.join(ts_sub_dir, 'ts.pickle')
     if not os.path.isfile(ts_path):
@@ -952,14 +1019,20 @@ def make_ts_summary(ts_sub_dir):
 
     # add conformational free energy
     confgen_sub_dir = ts_sub_dir.replace("evf", "confgen").split("_conf_")[0]
-    conf_g = get_conf_g(confgen_sub_dir=confgen_sub_dir)
-    update_w_conf_g(conf_g=conf_g,
+    conf_results = get_conf_g(confgen_sub_dir=confgen_sub_dir,
+                              dic_w_ens=dic_w_ens)
+
+    update_w_conf_g(conf_g=conf_results["conf_g"],
+                    de=conf_results["de"],
+                    total_conf_g=conf_results["total_conf_g"],
+                    total_de=conf_results["total_de"],
                     dic=ts_summary)
 
     return ts_summary
 
 
-def make_cis(smiles):
+def make_general_smiles(smiles,
+                        stereo):
     substruc_idx = get_substruc_idx(template_smiles=TRANS_AZO,
                                     smiles=smiles)
     nn_idx = substruc_idx[4:6]
@@ -972,9 +1045,9 @@ def make_cis(smiles):
         return
 
     bond_idx, bond = nn_bond_pairs[0]
-    bond.SetStereo(Chem.BondStereo.STEREOZ)
+    bond.SetStereo(stereo)
 
-    cis_smiles = Chem.MolToSmiles(
+    new_smiles = Chem.MolToSmiles(
         Chem.MolFromSmiles(
             Chem.MolToSmiles(
                 new_mol
@@ -982,17 +1055,30 @@ def make_cis(smiles):
         )
     )
 
-    return cis_smiles
+    return new_smiles
+
+
+def make_cis(smiles):
+    return make_general_smiles(smiles=smiles,
+                               stereo=Chem.BondStereo.STEREOZ)
+
+
+def make_trans(smiles):
+    return make_general_smiles(smiles=smiles,
+                               stereo=Chem.BondStereo.STEREOE)
 
 
 def summarize_all_ts(ts_dir,
                      final_info_dict):
 
+    dic_w_ens = {}
+
     for i in os.listdir(ts_dir):
         ts_sub_dir = os.path.join(ts_dir, i)
         if not os.path.isdir(ts_sub_dir):
             continue
-        ts_summary = make_ts_summary(ts_sub_dir=ts_sub_dir)
+        ts_summary = make_ts_summary(ts_sub_dir=ts_sub_dir,
+                                     dic_w_ens=dic_w_ens)
         if ts_summary is None:
             continue
 
@@ -1020,6 +1106,8 @@ def summarize_all_ts(ts_dir,
         sub_dic['transition_states'] = list(sub_dic['transition_states']
                                             .values())
 
+    return dic_w_ens
+
 
 def filter_by_done(final_info_dict):
     keep_keys = []
@@ -1044,7 +1132,8 @@ def filter_by_done(final_info_dict):
     return final_info_dict
 
 
-def make_end_summary(hess_sub_dir):
+def make_end_summary(hess_sub_dir,
+                     dic_w_ens):
 
     hess_path = os.path.join(hess_sub_dir, 'hess.json')
     if not os.path.isfile(hess_path):
@@ -1081,21 +1170,27 @@ def make_end_summary(hess_sub_dir):
 
     confgen_sub_dir = hess_sub_dir.replace(
         "hessian", "confgen").split("_conf_")[0]
-    conf_g = get_conf_g(confgen_sub_dir=confgen_sub_dir)
-    update_w_conf_g(conf_g=conf_g,
+    conf_results = get_conf_g(confgen_sub_dir=confgen_sub_dir,
+                              dic_w_ens=dic_w_ens)
+    update_w_conf_g(conf_g=conf_results["conf_g"],
+                    de=conf_results["de"],
+                    total_conf_g=conf_results["total_conf_g"],
+                    total_de=conf_results["total_de"],
                     dic=hess_summary)
 
     return hess_summary
 
 
 def summarize_endpoints(hess_dir,
-                        final_info_dict):
+                        final_info_dict,
+                        dic_w_ens):
 
     for i in os.listdir(hess_dir):
         hess_sub_dir = os.path.join(hess_dir, i)
         if not os.path.isdir(hess_sub_dir):
             continue
-        end_summary = make_end_summary(hess_sub_dir=hess_sub_dir)
+        end_summary = make_end_summary(hess_sub_dir=hess_sub_dir,
+                                       dic_w_ens=dic_w_ens)
         if end_summary is None:
             continue
 
@@ -1474,8 +1569,38 @@ def get_min_st_dics(mech_results_dic,
     return min_g_dics
 
 
+def add_extra_info(summary,
+                   smiles,
+                   sub_dic):
+
+    cis_smiles = make_cis(smiles=smiles)
+    trans_smiles = make_trans(smiles=smiles)
+
+    sort_keys = sorted(['cis', 'trans'],
+                       key=lambda x: sub_dic[x]['free_energy'])
+    stable = sort_keys[0]
+    unstable = sort_keys[1]
+
+    sub_dic.update({"cis_smiles": cis_smiles,
+                    "trans_smiles": trans_smiles,
+                    "stable": stable,
+                    "unstable": unstable})
+
+
+def update_w_st(summary,
+                end_key,
+                min_st_dics):
+
+    import pdb
+    pdb.set_trace()
+
+    if 's_t_crossing' not in summary:
+        summary['s_t_crossing'] = {}
+    summary[end_key]['s_t_crossing'] = min_st_dics
+
+
 def make_summary(final_info_dict):
-    for sub_dic in final_info_dict.values():
+    for smiles, sub_dic in final_info_dict.items():
         if 'summary' not in sub_dic:
             sub_dic['summary'] = {}
 
@@ -1488,26 +1613,32 @@ def make_summary(final_info_dict):
             mech_results = mech_results_dic['ts']
             min_g_dic = sorted(mech_results,
                                key=lambda x: x['delta_free_energy'])[0]
-            if end_key not in summary:
-                summary[end_key] = {}
-            summary[end_key]['singlet_barrier'] = min_g_dic
+
+            summary[end_key] = min_g_dic
 
             min_st_dics = get_min_st_dics(mech_results_dic=mech_results_dic,
                                           sub_dic=sub_dic)
 
-            summary[end_key]['s_t_crossing'] = min_st_dics
+            update_w_st(summary=summary,
+                        end_key=end_key,
+                        min_st_dics=min_st_dics)
+
+        add_extra_info(summary=summary,
+                       sub_dic=sub_dic,
+                       smiles=smiles)
 
 
 def summarize(base_dir,
               dir_info):
 
     final_info_dict = {}
-    summarize_all_ts(ts_dir=dir_info['evf'],
-                     final_info_dict=final_info_dict)
+    dic_w_ens = summarize_all_ts(ts_dir=dir_info['evf'],
+                                 final_info_dict=final_info_dict)
 
     # needs to be before isc so we can figure out which side each one is on
     summarize_endpoints(hess_dir=dir_info['hessian'],
-                        final_info_dict=final_info_dict)
+                        final_info_dict=final_info_dict,
+                        dic_w_ens=dic_w_ens)
     summarize_all_isc(isc_dir=dir_info['triplet_crossing'],
                       final_info_dict=final_info_dict)
 

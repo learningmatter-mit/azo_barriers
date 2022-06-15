@@ -2,10 +2,10 @@
     "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/singlet/0",
     "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/models/triplet/0",
     "smiles_list": [
-        "O=S(n1ccc(-c2cc(Cl)cc(-c3ccn(S(=O)C(F)(F)F)c3)c2/N=N/c2ccccc2)c1)C(F)(F)F",
+        "CCN(CC)c1ccc(/N=N\\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1",
         "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N/c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1"
     ],
-    "device": 0,
+    "device": 2,
     "rdkit_confgen": {},
     "relaxed_scan": {},
     "confgen": {
