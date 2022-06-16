@@ -16,6 +16,7 @@ from ase.build import minimize_rotation_and_translation as align
 from ase import Atoms
 
 from nff.utils.confgen import get_mol
+from nff.utils.confgen import INCHI_OPTIONS
 from nff.utils.misc import bash_command
 from nff.utils import constants as const
 
@@ -126,7 +127,8 @@ def load_rdkit_confgen(rd_dir,
 
         info = {"nxyz": rd_to_nxyz(rd_mol),
                 "smiles": smiles,
-                "inchikey": Chem.inchi.MolToInchiKey(mol_no_h)}
+                "inchikey": Chem.inchi.MolToInchiKey(mol_no_h,
+                                                     options=INCHI_OPTIONS)}
 
         info_list.append(info)
 
@@ -982,7 +984,7 @@ def update_w_conf_g(conf_g,
 
     dic.update({"conf_free_energy": total_conf_g,
                 "avg_conf_energy": total_de,
-                "conf_entropy": - total_conf_g,
+                "conf_entropy": -total_conf_g,
                 "vib_entropy": vib_entropy,
                 "entropy": vib_entropy - total_conf_g,
                 "free_energy": free_en + total_conf_g + total_de,
@@ -1125,7 +1127,9 @@ def filter_by_done(final_info_dict):
                 keep_ts_lists.append(new_ts_list)
 
         sub_dic['transition_states'] = keep_ts_lists
-        if num_done >= 4:
+        endpoints_convg = [sub_dic[isomer]['converged'] for isomer in
+                           ['cis', 'trans']]
+        if num_done >= 4 and all(endpoints_convg):
             keep_keys.append(key)
 
     final_info_dict = {key: final_info_dict[key] for key in keep_keys}
@@ -1153,6 +1157,7 @@ def make_end_summary(hess_sub_dir,
     ts_keys = ['converged', 'entropy', 'freeenergy', 'enthalpy', 'vibfreqs',
                'energy']
     translate = {"freeenergy": "free_energy"}
+
     imgfreq = len([i for i in dic['vibfreqs'] if i < old_info['imag_cutoff']])
     converged = (imgfreq == 0)
 
@@ -1217,15 +1222,17 @@ def summarize_endpoints(hess_dir,
             final_info_dict[smiles] = {}
 
         sub_dic = final_info_dict[smiles]
-        sub_dic[new_key] = end_summary
+        if new_key not in sub_dic:
+            sub_dic[new_key] = end_summary
 
 
 def make_mech_ts_summary(ts_dic,
                          sub_dic,
                          end_key,
-                         trace=False):
+                         include_irc,
+                         name='ts'):
 
-    ts_summary = {"ts_nxyz": ts_dic["nxyz"],
+    ts_summary = {"%s_nxyz" % name: ts_dic["nxyz"],
                   "endpoint_nxyz": sub_dic.get(end_key, {}).get("nxyz")}
 
     use_keys = ['free_energy',
@@ -1235,15 +1242,13 @@ def make_mech_ts_summary(ts_dic,
                 'free_energy_no_conf',
                 'conf_free_energy',
                 'conf_entropy',
-                'vib_entropy']
+                'vib_entropy',
+                'avg_conf_energy']
 
     use_keys += ["eff_%s" % i for i in use_keys]
 
     end_dic = sub_dic.get(end_key, {})
     for key in use_keys:
-        # if key == 'eff_free_energy':
-        # import pdb
-        # pdb.set_trace()
         end_val = end_dic.get(key)
         if end_val is None:
             end_val = end_dic.get(key.replace("eff_", ""))
@@ -1256,6 +1261,7 @@ def make_mech_ts_summary(ts_dic,
         delta = ts_dic[key] - end_val
         if 'energy' in key or 'enthalpy' in key:
             delta *= const.HARTREE_TO_KCAL_MOL
+
         ts_summary["delta_" + key] = delta
 
     for key in list(ts_summary.keys()):
@@ -1266,14 +1272,16 @@ def make_mech_ts_summary(ts_dic,
         ts_summary.pop(key)
 
     ts_summary.update({"endpoint_conf_free_energy": end_dic.get("conf_free_energy"),
-                       "ts_conf_free_energy": ts_dic.get("conf_free_energy")})
+                       "%s_conf_free_energy" % name: ts_dic.get("conf_free_energy")})
     for key in ['mechanism', 'confnum']:
         if ts_dic.get(key) is not None:
             ts_summary.update({key: ts_dic[key]})
 
-    # for key in ['endpoint_conf_free_energy', 'ts_conf_free_energy']:
-    #     if ts_summary.get(key) is not None:
-    #         ts_summary[key] *= const.AU_TO_KCAL['energy']
+    if include_irc:
+        for key in ['irc_energies', 'irc_path']:
+            if key not in ts_dic:
+                continue
+            ts_summary.update({key: ts_dic[key]})
 
     return ts_summary
 
@@ -1284,7 +1292,8 @@ def update_mech_dic(ts_dic,
 
     ts_summary = make_mech_ts_summary(ts_dic=ts_dic,
                                       sub_dic=sub_dic,
-                                      end_key=end_key)
+                                      end_key=end_key,
+                                      include_irc=True)
     sub_dic['results_by_mechanism'][end_key]['ts'].append(ts_summary)
 
 
@@ -1309,7 +1318,7 @@ def select_isc(ts_list):
 
 
 def update_mech_w_isc(final_info_dict):
-    for sub_dic in final_info_dict.values():
+    for smiles, sub_dic in final_info_dict.items():
         ts_lists = [select_isc(i) for i in sub_dic['transition_states']]
         sort_g_dics = [sorted(ts_list, key=lambda x: x.get("eff_free_energy",
                                                            float("inf")))
@@ -1325,11 +1334,14 @@ def update_mech_w_isc(final_info_dict):
                 for s_t_dic in s_t_dics:
                     if not s_t_dic['converged']:
                         continue
+
                     s_t_summary = make_mech_ts_summary(ts_dic=s_t_dic,
                                                        sub_dic=sub_dic,
                                                        end_key=end_key,
-                                                       trace=True)
-                    s_t_summary.update({"endpoint": s_t_dic["endpoint"]})
+                                                       name='s_t_crossing',
+                                                       include_irc=False)
+                    s_t_summary.update({"endpoint": s_t_dic["endpoint"],
+                                        "t_isc": s_t_dic["t_isc"]})
                     s_t_summaries.append(s_t_summary)
 
                 mech_results[end_key]['s_t_crossing'].append(s_t_summaries)
@@ -1375,11 +1387,9 @@ def determine_triplet_side(props_list,
         crossing_nxyz = props['nxyz']
         eff_cross_atoms = nxyz_to_atoms(np.array(crossing_nxyz)[react_idx])
         align(eff_ref_atoms, eff_cross_atoms)
-
         num_atoms = len(eff_ref_atoms)
         rmsd = (((eff_cross_atoms.get_positions() -
                   eff_ref_atoms.get_positions()) ** 2).sum() / num_atoms) ** 0.5
-
         rmsds.append(rmsd)
 
     argmin = int(np.argmin(rmsds))
@@ -1403,7 +1413,7 @@ def get_some_isc_info(final_info_dict,
 
     substruc_idx = get_substruc_idx(template_smiles=TRANS_AZO,
                                     smiles=cis_smiles)
-    react_idx = substruc_idx[4:6]
+    react_idx = substruc_idx[3:7]
 
     return react_idx, cis_nxyz, trans_nxyz
 
@@ -1467,20 +1477,21 @@ def make_isc_summary(isc_sub_dir,
             # the rovibrational quantities from the TS
 
             props['energy'] = props['singlet_energy']
-            base_keys = ['entropy',
-                         'free_energy',
-                         'enthalpy',
-                         'conf_entropy',
-                         'conf_free_energy']
+            key_dic = {"delta": ['free_energy', 'enthalpy'],
+                       "same": ['entropy',
+                                'conf_entropy',
+                                'conf_free_energy',
+                                'vib_entropy',
+                                'avg_conf_energy']}
 
-            for ts_key, ts_val in ts_dic.items():
-                if ts_key not in base_keys:
-                    continue
-                if ts_key in ['entropy', 'conf_entropy', 'conf_free_energy']:
-                    props[ts_key] = ts_val
-                else:
-                    delta = ts_val - ts_dic['energy']
-                    props[ts_key] = props['energy'] + delta
+            for key_type, sub_keys in key_dic.items():
+                for sub_key in sub_keys:
+                    if key_type == 'delta':
+                        delta = ts_dic[sub_key] - ts_dic['energy']
+                        new_val = props['energy'] + delta
+                    else:
+                        new_val = ts_dic[sub_key]
+                    props[sub_key] = new_val
 
     out = get_some_isc_info(final_info_dict=final_info_dict,
                             cis_smiles=cis_smiles)
@@ -1543,6 +1554,42 @@ def summarize_all_isc(isc_dir,
         ts_dic['s_t_crossing'] += isc_summary
 
 
+def add_irc(irc_dir,
+            final_info_dict):
+
+    for i in os.listdir(irc_dir):
+        irc_sub_dir = os.path.join(irc_dir, i)
+        if not os.path.isdir(irc_sub_dir):
+            continue
+
+        info_path = os.path.join(irc_sub_dir, 'job_info.json')
+        with open(info_path, 'r') as f:
+            info = json.load(f)
+
+        cis_smiles = make_cis(info['smiles'])
+        mech = info['mechanism']
+        confnum = info['confnum']
+
+        ts_dics = []
+        for ts_list in final_info_dict[cis_smiles]['transition_states']:
+            for ts in ts_list:
+                this_mech = ts['mechanism']
+                this_confum = ts['confnum']
+
+                if this_mech == mech and this_confum == confnum:
+                    ts_dics.append(ts)
+
+        assert len(ts_dics) == 1, "Something has gone wrong"
+        ts_dic = ts_dics[0]
+
+        irc_path = os.path.join(irc_sub_dir, 'irc.pickle')
+        with open(irc_path, 'rb') as f:
+            irc_info = pickle.load(f)
+
+        ts_dic['irc_path'] = irc_info['nxyz_list']
+        ts_dic['irc_energies'] = irc_info['energies']
+
+
 def get_min_st_dics(mech_results_dic,
                     sub_dic):
 
@@ -1572,7 +1619,7 @@ def get_min_st_dics(mech_results_dic,
 
 def add_extra_info(summary,
                    smiles,
-                   sub_dic):
+                   sub_dic,):
 
     cis_smiles = make_cis(smiles=smiles)
     trans_smiles = make_trans(smiles=smiles)
@@ -1589,15 +1636,20 @@ def add_extra_info(summary,
 
 
 def update_w_st(summary,
-                end_key,
-                min_st_dics):
+                sub_dic,
+                mech_result_dic):
 
-    import pdb
-    pdb.set_trace()
+    unstable = sub_dic['unstable']
+    stable = sub_dic['stable']
 
-    if 's_t_crossing' not in summary:
-        summary['s_t_crossing'] = {}
-    summary[end_key]['s_t_crossing'] = min_st_dics
+    mech_results = mech_result_dic[unstable]
+    min_st_dics = get_min_st_dics(mech_results_dic=mech_results,
+                                  sub_dic=sub_dic)
+    stable_s_t = [i for i in min_st_dics if i['endpoint'] == stable][0]
+    unstable_s_t = [i for i in min_st_dics if i['endpoint'] == unstable][0]
+
+    summary['s_t_crossing'] = {"stable_side": stable_s_t,
+                               "unstable_side": unstable_s_t}
 
 
 def make_summary(final_info_dict):
@@ -1617,16 +1669,13 @@ def make_summary(final_info_dict):
 
             summary[end_key] = min_g_dic
 
-            min_st_dics = get_min_st_dics(mech_results_dic=mech_results_dic,
-                                          sub_dic=sub_dic)
-
-            update_w_st(summary=summary,
-                        end_key=end_key,
-                        min_st_dics=min_st_dics)
-
         add_extra_info(summary=summary,
                        sub_dic=sub_dic,
                        smiles=smiles)
+
+        update_w_st(summary=summary,
+                    sub_dic=sub_dic,
+                    mech_result_dic=mech_result_dic)
 
 
 def summarize(base_dir,
@@ -1643,9 +1692,12 @@ def summarize(base_dir,
     summarize_all_isc(isc_dir=dir_info['triplet_crossing'],
                       final_info_dict=final_info_dict)
 
+    # needs to be before `make_results_by_mech`
+    add_irc(irc_dir=dir_info['irc'],
+            final_info_dict=final_info_dict)
+    
     make_results_by_mech(final_info_dict=final_info_dict)
     update_mech_w_isc(final_info_dict=final_info_dict)
-
     make_summary(final_info_dict=final_info_dict)
 
     final_info_dict = filter_by_done(final_info_dict=final_info_dict)
@@ -1653,7 +1705,8 @@ def summarize(base_dir,
     return final_info_dict
 
 
-def run_all(base_dir):
+def run_all(base_dir,
+            skip_simulations):
     info_path = os.path.join(base_dir, 'job_info.json')
     base_info = load_params(info_path)
     dir_info = make_all_subdirs(base_dir=base_dir)
@@ -1661,7 +1714,8 @@ def run_all(base_dir):
               "base_info": base_info,
               "base_dir": base_dir}
 
-    run_simulations(**kwargs)
+    if not skip_simulations:
+        run_simulations(**kwargs)
     print("Summarizing results...")
     summary = summarize(base_dir=base_dir,
                         dir_info=dir_info)
@@ -1677,10 +1731,19 @@ def main():
                         type=str,
                         help="Where to run the calculations",
                         default=".")
+    parser.add_argument("--skip_simulations",
+                        action='store_true',
+                        help="Skip simulations and just summarize existing results")
     args = parser.parse_args()
 
-    run_all(base_dir=args.base_dir)
+    run_all(base_dir=args.base_dir,
+            skip_simulations=args.skip_simulations)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        import pdb
+        pdb.post_mortem()

@@ -82,7 +82,7 @@
     "min_md_runs": 2,
     "fmax_coarse": 0.2,
     "fmax_tight": 0.05,
-    "fmax_vtight": 0.01,
+    "fmax_vtight": 0.005,
     "window_coarse": 15.0,
     "window_tight": 8.0,
     "window_vtight": 2.5,
