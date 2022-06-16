@@ -41,7 +41,13 @@ An example calculation can be found in the `examples` folder. To test it out, ru
 cd examples
 ./run.sh
 ```
-This should produce a series of calculations for two different molecules. The calculations include:
+
+To run this for your own molecules, simply supply their SMILES strings in the file `examples/job_info.json`:
+```
+"smiles_list": [...]
+````
+
+The script should produce a series of calculations for two different molecules. The calculations include:
 - Initial 3D structure generation through RDKit
 - 4 relaxed scans per molecule to generate 4 possible transition states (TSs) of different mechanisms
 - Metadynamics-based conformer generation to generate reactant, product, and TS conformers 
@@ -50,10 +56,7 @@ This should produce a series of calculations for two different molecules. The ca
 - Singlet-triplet minimum energy crossing point search
 - Intrinsic reaction coordinate generation for the optimized TSs
 
-To run this for your own molecules, simply supply their SMILES strings in the file `examples/job_info.json`:
-```
-"smiles_list": [...]
-````
+
 Note that you only need to provide one cis or trans SMILES per molecule. You can also set the directory of your singlet neural network model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the device you want to use (`cpu` if you have no GPUs, or the index of the GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
 
 The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load, visualize, and interpret the results. They also go into some detail about other parameters you can specify in `job_info.json`
