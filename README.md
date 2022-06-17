@@ -6,7 +6,7 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 ## Conda environment
 
-We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing anaconda environments by reading [this page](http://conda.pydata.org/). To create the environment, use the following commands:
+We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). To create the environment, use the following commands:
 
 ```bash
 conda upgrade conda
