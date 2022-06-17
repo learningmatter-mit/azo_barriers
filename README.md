@@ -13,7 +13,7 @@ conda upgrade conda
 conda env create -f environment.yml
 ```
 
-To ensure that the `barriers` environment is accessible through Jupyter, add the the `barriers` display name:
+This creates an environment called `barriers`. To ensure that the `barriers` environment is accessible through Jupyter, add the the `barriers` display name:
 ```bash
 python -m ipykernel install --user --name barriers --display-name "Python [conda env:barriers"]
 ```
