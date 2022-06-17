@@ -959,39 +959,33 @@ def main(ts_nxyz,
     # and just set it to blank, because there's no other
     # way to just get the energy
 
-    try:
-        en_func = make_en_func(calc_type=calc_type,
-                               neural_en_key=neural_en_key,
-                               cutoff=cutoff,
-                               device=device,
-                               model_path=model_path,
-                               config_name=config_name,
-                               jobspec=jobspec,
-                               job_dir=job_dir,
-                               grad_key=grad_key,
-                               model_kwargs=model_kwargs)
+    en_func = make_en_func(calc_type=calc_type,
+                           neural_en_key=neural_en_key,
+                           cutoff=cutoff,
+                           device=device,
+                           model_path=model_path,
+                           config_name=config_name,
+                           jobspec=jobspec,
+                           job_dir=job_dir,
+                           grad_key=grad_key,
+                           model_kwargs=model_kwargs)
 
-        irc, energies = run_all(ts_nxyz=ts_nxyz,
-                                eigvecs=eigvecs,
-                                freqs_cm=freqs_cm,
-                                en_func=en_func,
-                                init_displ_de=init_displ_de,
-                                max_iter=max_iter,
-                                tol_max_g=tol_max_g,
-                                tol_rms_g=tol_rms_g,
-                                scale_displ_sd_corr=scale_displ_sd_corr,
-                                sd_corr_parabolic_fit=sd_corr_parabolic_fit,
-                                do_sd_corr=do_sd_corr,
-                                interpolate_only=interpolate_only,
-                                sd_parabolic_fit=sd_parabolic_fit,
-                                scale_displ_sd=scale_displ_sd,
-                                adapt_scale_disp=adapt_scale_disp,
-                                mode=mode)
-
-    except Exception as e:
-        print(e)
-        import pdb
-        pdb.post_mortem()
+    irc, energies = run_all(ts_nxyz=ts_nxyz,
+                            eigvecs=eigvecs,
+                            freqs_cm=freqs_cm,
+                            en_func=en_func,
+                            init_displ_de=init_displ_de,
+                            max_iter=max_iter,
+                            tol_max_g=tol_max_g,
+                            tol_rms_g=tol_rms_g,
+                            scale_displ_sd_corr=scale_displ_sd_corr,
+                            sd_corr_parabolic_fit=sd_corr_parabolic_fit,
+                            do_sd_corr=do_sd_corr,
+                            interpolate_only=interpolate_only,
+                            sd_parabolic_fit=sd_parabolic_fit,
+                            scale_displ_sd=scale_displ_sd,
+                            adapt_scale_disp=adapt_scale_disp,
+                            mode=mode)
 
     save(job_dir=job_dir,
          irc=irc,

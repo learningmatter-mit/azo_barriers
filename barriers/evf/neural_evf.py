@@ -6,11 +6,9 @@ using eigenvector following.
 
 
 import argparse
-import json
 import numpy as np
 import pickle
 
-from ase import Atoms
 from nff.md.tully.io import coords_to_xyz
 from nff.reactive_tools.ev_following import ev_run
 from nff.io.ase import AtomsBatch
@@ -62,7 +60,7 @@ def add_converged(atoms,
                   ev_kwargs):
 
     freqs = np.array(mode_results['vibfreqs'])
-    imgfreq = len((freqs < 0).nonzero()[0])
+    imgfreq = len((freqs < imag_cutoff).nonzero()[0])
     grad = atoms.get_forces()
 
     fmax = abs(grad).max()

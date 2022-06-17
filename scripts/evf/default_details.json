@@ -27,7 +27,7 @@
     },
     "thermo_kwargs": {
         "flip_all_but_ts": true,
-        "imag_cutoff": 0
+        "imag_cutoff": -10
     },
     "cutoff_to_be_ts": -200,
     "confs_per_ts": 5

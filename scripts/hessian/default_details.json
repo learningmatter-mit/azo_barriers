@@ -22,7 +22,7 @@
     "analytical_hessian": false,
     "temperature": 298.15,
     "pressure": 101325,
-    "imag_cutoff": 0,
+    "imag_cutoff": -10,
     "rotor_cutoff": 50,
     "confs_per_endpoint": 1
 }

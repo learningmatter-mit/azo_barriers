@@ -1129,6 +1129,7 @@ def filter_by_done(final_info_dict):
         sub_dic['transition_states'] = keep_ts_lists
         endpoints_convg = [sub_dic[isomer]['converged'] for isomer in
                            ['cis', 'trans']]
+
         if num_done >= 4 and all(endpoints_convg):
             keep_keys.append(key)
 
@@ -1695,7 +1696,7 @@ def summarize(base_dir,
     # needs to be before `make_results_by_mech`
     add_irc(irc_dir=dir_info['irc'],
             final_info_dict=final_info_dict)
-    
+
     make_results_by_mech(final_info_dict=final_info_dict)
     update_mech_w_isc(final_info_dict=final_info_dict)
     make_summary(final_info_dict=final_info_dict)
@@ -1741,9 +1742,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
-        import pdb
-        pdb.post_mortem()
+    main()
