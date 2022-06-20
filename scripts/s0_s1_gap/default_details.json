@@ -1,0 +1,7 @@
+{
+    "weightpath": null,
+    "nnid": "",
+    "cutoff": 5.0,
+    "batch_size": 10,
+    "device": 0
+}

@@ -55,9 +55,9 @@ The script should produce a series of calculations for two different molecules. 
 - Hessian calculations on the optimized reactants and products
 - Singlet-triplet minimum energy crossing point search
 - Intrinsic reaction coordinate generation for the optimized TSs
+- Single point $S_0/S_1$ gap calculations on the optimized *cis* and *trans* geometries
 
-
-Note that you only need to provide one cis or trans SMILES per molecule. You can also set the directory of your singlet neural network model (`weightpath`), the directory of your triplet model `(triplet_weightpath`), the device you want to use (`cpu` if you have no GPUs, or the index of the GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
+Note that you only need to provide one cis or trans SMILES per molecule. You can also set the directory of your singlet neural network model (`weightpath`), the directory of your triplet model (`triplet_weightpath`), the directory of your $S_0/S_1$ gap model (`s0_s1_weightpath`), the device you want to use (`cpu` if you have no GPUs, or the index of the GPU you want to use), and the number of parallel jobs to run at once for each of the configs (`num_parallel`).
 
 The final results are stored in `examples/summary.pickle`. [Tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load, visualize, and interpret the results. They also go into some detail about other parameters you can specify in `job_info.json`
 

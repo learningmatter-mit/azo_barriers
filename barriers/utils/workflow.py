@@ -10,6 +10,9 @@ import numpy as np
 import copy
 from rdkit import Chem
 import argparse
+import torch
+
+from torch.utils.data import DataLoader
 
 from ase.io.trajectory import Trajectory
 from ase.build import minimize_rotation_and_translation as align
@@ -19,6 +22,8 @@ from nff.utils.confgen import get_mol
 from nff.utils.confgen import INCHI_OPTIONS
 from nff.utils.misc import bash_command
 from nff.utils import constants as const
+from nff.data import Dataset, collate_dicts
+from nff.train import load_model, evaluate
 
 from barriers.confgen.neural_confgen import atoms_to_nxyz
 from barriers.utils.neuraloptimizer import get_substruc_idx
@@ -1679,8 +1684,124 @@ def make_summary(final_info_dict):
                     mech_result_dic=mech_result_dic)
 
 
+def make_endpoint_dset(info,
+                       end_key,
+                       cutoff,
+                       test=False):
+
+    props = {"key": [], 'nxyz': []}
+    for key, sub_dic in info.items():
+        summary = sub_dic.get('summary', {}).get(end_key)
+        if not summary:
+            continue
+        props['nxyz'].append(summary['endpoint_nxyz'])
+        props['key'].append(key)
+
+    dset = Dataset(props,
+                   do_copy=False)
+    dset.generate_neighbor_list(cutoff=cutoff,
+                                undirected=False)
+
+    if test:
+        dset.change_idx(list(range(100)))
+
+    return dset
+
+
+def null_loss(x, y):
+    return torch.Tensor([0])
+
+
+def eval_dann(dset,
+              batch_size,
+              model,
+              device):
+
+    loader = DataLoader(dset,
+                        batch_size=batch_size,
+                        collate_fn=collate_dicts)
+    results, batches, _ = evaluate(model=model,
+                                   loader=loader,
+                                   loss_fn=null_loss,
+                                   device=device)
+
+    if len(results['energy_1'][0].shape) == 0:
+        op = torch.stack
+    else:
+        op = torch.cat
+
+    gaps = (op(results['energy_1']).reshape(-1) -
+            op(results['energy_0']).reshape(-1)
+            ).numpy() / const.EV_TO_KCAL_MOL
+
+    keys = batches['key']
+    assert len(keys) == len(gaps)
+    gap_dic = {key: float(gap) for key, gap in zip(keys, gaps)}
+
+    return gap_dic
+
+
+def add_dann_preds(info,
+                   weightpath,
+                   dann_id,
+                   cutoff,
+                   batch_size,
+                   device,
+                   test=False):
+
+    model = load_model(os.path.join(weightpath, str(dann_id)))
+
+    for end_key in ['cis', 'trans']:
+        dset = make_endpoint_dset(info=info,
+                                  end_key=end_key,
+                                  cutoff=cutoff,
+                                  test=test)
+        gap_dic = eval_dann(dset=dset,
+                            batch_size=batch_size,
+                            model=model,
+                            device=device)
+        for smiles, gap in gap_dic.items():
+            info[smiles][end_key]['s0_s1_gap_ev'] = gap
+
+
+def get_s1_s0_info(base_info):
+    default_path = os.path.join(SCRIPTS, "s0_s1_gap", "default_details.json")
+    with open(default_path, "r") as f:
+        info = json.load(f)
+    translate = {"nnid": "dann_id",
+                 "weightpath": "s0_s1_weightpath"}
+    for key, val in translate.items():
+        info[val] = info[key]
+        info.pop(key)
+
+    main_dic_keys = ["s0_s1_weightpath", "device"]
+    for key in main_dic_keys:
+        if key in base_info:
+            info[key] = base_info[key]
+
+    info.update(base_info.get("s0_s1_gap", {}))
+
+    return info
+
+
+def add_s0_s1_gaps(final_info_dict,
+                   base_info):
+
+    print("Computing S0/S1 excitation energies on cis and trans endpoints...")
+
+    s0_s1_info = get_s1_s0_info(base_info=base_info)
+
+    add_dann_preds(info=final_info_dict,
+                   weightpath=s0_s1_info['s0_s1_weightpath'],
+                   dann_id=s0_s1_info['dann_id'],
+                   cutoff=s0_s1_info['cutoff'],
+                   batch_size=s0_s1_info['batch_size'],
+                   device=s0_s1_info['device'])
+
+
 def summarize(base_dir,
-              dir_info):
+              dir_info,
+              base_info):
 
     final_info_dict = {}
     dic_w_ens = summarize_all_ts(ts_dir=dir_info['evf'],
@@ -1700,6 +1821,8 @@ def summarize(base_dir,
     make_results_by_mech(final_info_dict=final_info_dict)
     update_mech_w_isc(final_info_dict=final_info_dict)
     make_summary(final_info_dict=final_info_dict)
+    add_s0_s1_gaps(final_info_dict=final_info_dict,
+                   base_info=base_info)
 
     final_info_dict = filter_by_done(final_info_dict=final_info_dict)
 
@@ -1719,7 +1842,9 @@ def run_all(base_dir,
         run_simulations(**kwargs)
     print("Summarizing results...")
     summary = summarize(base_dir=base_dir,
-                        dir_info=dir_info)
+                        dir_info=dir_info,
+                        base_info=base_info)
+
     save_path = os.path.join(base_dir, 'summary.pickle')
     with open(save_path, 'wb') as f:
         pickle.dump(summary, f)
