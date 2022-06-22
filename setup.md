@@ -1,6 +1,6 @@
 ## Setup
 
-If the `setup.sh` script does not work, you can perform the following steps, which is what `setup.sh1` is doing under the hood. 
+If the `setup.sh` script does not work, then you can perform the following steps instead. These are the steps followed by `setup.sh` under the hood. 
 
 
 To create the environment, use the following commands:
