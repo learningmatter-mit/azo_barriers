@@ -6,7 +6,7 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 ## Conda environment
 
-We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). Run `./setup.sh` to create the conda environment and install dependencies, such as [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository. If something goes wrong when running this script, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md).
+We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). You can run `./setup.sh` to create the environment. If something goes wrong, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md).
 
 
 ## Tutorials
