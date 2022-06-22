@@ -6,7 +6,9 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 ## Conda environment
 
-We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). You can run `./setup.sh` to create the environment. If something goes wrong, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md).
+We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). 
+
+Run `./setup.sh` to create the environment. If something goes wrong, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md).
 
 
 ## Tutorials
