@@ -8,7 +8,7 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). [This script](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.sh) creates a conda environment called `barriers`, downloads the [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository, and puts the appropriate directories in your path. If something goes wrong when running this script, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md), which explains what the script is doing step by step.
 
-```
+
 ## Tutorials
 [Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data. The data can be found [here](https://doi.org/10.18126/unc8-336t). The tutorials also show how to load any data you may generate yourself. To learn how to generate your own data with pre-made scripts, see the **Examples** section in this document.
 
