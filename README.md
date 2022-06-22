@@ -6,30 +6,8 @@ This code repository is developed in the Learning Matter Lab (led by prof. Rafae
 
 ## Conda environment
 
-We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). To create the environment, use the following commands:
+We recommend creating a [conda](https://conda.io/docs/index.html) environment to run the code. You can learn more about managing conda environments by reading [this page](http://conda.pydata.org/). [This script](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.sh) creates a conda environment called `barriers`, downloads the [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository, and puts the appropriate directories in your path. If something goes wrong when running this script, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md), which explains what the script is doing step by step.
 
-```bash
-conda upgrade conda
-conda env create -f environment.yml
-```
-
-This creates an environment called `barriers`. To ensure that the `barriers` environment is accessible through Jupyter, add the the `barriers` display name:
-```bash
-python -m ipykernel install --user --name barriers --display-name "Python [conda env:barriers"]
-```
-
-Next, download the [Neural Force Field](https://github.com/learningmatter-mit/NeuralForceField) repository, which is also managed by our group. You can either install it through `pip`, or clone it and put the folder in your path (see below). We recommend the latter, since NFF is under constant development, and often needs to be pulled from github when changes are made.
-
-Lastly, put the `azo_barriers` repository (and possibly NFF) in your path by adding the following lines to `~/.bashrc` (linux) or `~/.bash_profile` (mac):
-
-```
-# add the `azo_barriers` path
-export BARRIERS=<path to azo_barriers>
-export PYTHONPATH=$BARRIERS:$PYTHONPATH
-
-# if you're adding the Neural Force Field path as well
-export NFFDIR=<path to NFF>
-export PYTHONPATH=$NFFDIR:$PYTHONPATH
 ```
 ## Tutorials
 [Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data. The data can be found [here](https://doi.org/10.18126/unc8-336t). The tutorials also show how to load any data you may generate yourself. To learn how to generate your own data with pre-made scripts, see the **Examples** section in this document.
