@@ -302,6 +302,7 @@ dependencies:
     - qtpy==2.1.0
     - rest-framework-generic-relations==2.1.0
     - sdaxen-python-utilities==0.1.4
+    - seaborn==0.11.2
     - send2trash==1.8.0
     - soupsieve==2.3.2.post1
     - svgwrite==1.4.2

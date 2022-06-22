@@ -546,6 +546,14 @@ def run_until_crossing(g0_nxyz,
     last_triplet_path = None
     found_triplet = False
 
+    init_triplet_en, _, _ = triplet_en_func(nxyz=g0_nxyz,
+                                            grad=False,
+                                            load_path=False)
+
+    init_singlet_en, _, _ = en_func(nxyz=g0_nxyz,
+                                    grad=False,
+                                    load_path=False)
+
     for num_steps in tqdm(range(max_steps)):
 
         out = take_step(
@@ -570,15 +578,8 @@ def run_until_crossing(g0_nxyz,
                                                            load_path=last_triplet_path)
 
         triplet_ens.append(float(triplet_en))
-
-        if len(triplet_ens) >= 2:
-            old_triplet_en = triplet_ens[-2]
-            old_singlet_en = singlet_ens[-2]
-            old_sign = np.sign(old_triplet_en - old_singlet_en)
-            new_sign = np.sign(triplet_en - singlet_en)
-
-            if old_sign != new_sign:
-                found_triplet = True
+        if triplet_en > singlet_en and (init_triplet_en < init_singlet_en):
+            found_triplet = True
 
         if found_triplet or num_steps == (max_steps - 1):
             if found_triplet:
@@ -596,7 +597,6 @@ def run_until_crossing(g0_nxyz,
     trj = convert_irc(trj)
 
     return trj, singlet_ens, triplet_ens, found_triplet
-
 
 
 def run_opt(params, atoms):
