@@ -3,7 +3,7 @@
 If the `setup.sh` script does not work, then you can perform the following steps instead. These are the steps followed by `setup.sh` under the hood. 
 
 
-To create the environment, use the following commands:
+To create the `barriers` conda environment, use the following commands:
 
 ```bash
 conda upgrade conda
