@@ -49,6 +49,7 @@ if [ ! -z "${bash_path}" ]; then
     while IFS= read -r line; do
         grep "$line" $bash_path || echo "$line" >> $bash_path
     done <<< "$text"
+    source $bash_path
     echo "Done!"
 else
     echo "Couldn't find ~/.bashrc or ~/.bash_profile. Please export paths in the appropriate setup file."

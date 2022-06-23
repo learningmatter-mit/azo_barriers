@@ -29,3 +29,6 @@ export PYTHONPATH=$BARRIERS:$PYTHONPATH
 # if you're adding the Neural Force Field path as well
 export NFFDIR=<path to NFF>
 export PYTHONPATH=$NFFDIR:$PYTHONPATH
+```
+
+Make sure to run `source ~/.bashrc` or `source ~/.bash_profile` afterwards, so that your paths are updated.
