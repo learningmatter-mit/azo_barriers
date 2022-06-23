@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 
 source deactivate > /dev/null 2>&1
 exists='True'
@@ -31,6 +31,7 @@ nff_dir=$(pwd)/NeuralForceField
 
 cd -
 
+
 # export paths to bashrc or bash_profile
 text='export BARRIERS='$barrier_dir'
 export PYTHONPATH=$BARRIERS:$PYTHONPATH
@@ -49,7 +50,6 @@ if [ ! -z "${bash_path}" ]; then
     while IFS= read -r line; do
         grep "$line" $bash_path || echo "$line" >> $bash_path
     done <<< "$text"
-    source $bash_path
     echo "Done!"
 else
     echo "Couldn't find ~/.bashrc or ~/.bash_profile. Please export paths in the appropriate setup file."
