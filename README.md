@@ -12,7 +12,7 @@ Run `./setup.sh` to create the environment. Then run `source ~/.bashrc` (linux) 
 
 
 ## Tutorials
-[Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data. The data can be found [here](https://doi.org/10.18126/unc8-336t). The tutorials also show how to load any data you may generate yourself. To learn how to generate your own data with pre-made scripts, see the **Examples** section in this document.
+[Jupyter notebook tutorials](https://github.com/learningmatter-mit/azo_barriers/tree/main/tutorials) show how to load and interpret our published barrier data. The data can be found [here](https://doi.org/10.18126/unc8-336t). The tutorials also show how to load any data you may generate yourself. To learn how to generate your own data with pre-made scripts using our models, see the **Examples** section in this document.
 
 ## Examples
 
