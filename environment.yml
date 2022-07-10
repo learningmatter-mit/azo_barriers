@@ -1,4 +1,4 @@
-name: barriers_old
+name: barriers
 channels:
   - pytorch
   - conda-forge
