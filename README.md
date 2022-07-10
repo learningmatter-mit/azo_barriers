@@ -12,7 +12,7 @@ To create the envionrment, please do the following:
 1. Run `./setup.sh` to create the environment. 
 2. Run `source ~/.bashrc` (linux) or `source ~/.bash_profile` (Mac). 
 
-You're now ready to use the code base! Watch out for an SSH permission error when cloning NeuralForceField. If this arises, please authenticate your SSH keys, and then run `git clone git@github.com:learningmatter-mit/NeuralForceField.git`. 
+You're now ready to use the code base! Watch out for an SSH permission error when cloning NeuralForceField. If this arises, please authenticate your SSH keys, and then run `cd .. && git clone git@github.com:learningmatter-mit/NeuralForceField.git`. 
 
 If something else goes wrong, please see [this file](https://github.com/learningmatter-mit/azo_barriers/blob/main/setup.md).
 
