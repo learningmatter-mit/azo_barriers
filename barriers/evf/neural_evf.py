@@ -88,7 +88,7 @@ def save_results(xyz,
 
     numbers = atoms.get_atomic_numbers()
     nxyz = np.concatenate([numbers.reshape(-1, 1),
-                           xyz.numpy().reshape(-1, 3)], axis=-1)
+                           xyz.detach().cpu().numpy().reshape(-1, 3)], axis=-1)
 
     grad_conv = EV_TO_AU * BOHR_RADIUS
     forces = (-grad.reshape(-1, 3) * grad_conv)
