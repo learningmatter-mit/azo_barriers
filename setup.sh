@@ -25,7 +25,7 @@ cd ..
 if [ -d "NeuralForceField" ]; then
     echo 'NeuralForceField directory already exists; skipping installation'
 else
-    git clone git@github.com:learningmatter-mit/NeuralForceField.git
+    git clone git@github.com:learningmatter-mit/NeuralForceField.git || echo 'FAILED to clone NFF. Please check your ssh permissions and then run `git clone git@github.com:learningmatter-mit/NeuralForceField.git`'
 fi
 nff_dir=$(pwd)/NeuralForceField
 

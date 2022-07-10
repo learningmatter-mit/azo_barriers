@@ -1,8 +1,0 @@
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/CAMFOMFEKZVSBT-DQDYIGAPNA-O_right_invert && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/CAMFOMFEKZVSBT-DQDYIGAPNA-O_left_invert && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/CAMFOMFEKZVSBT-DQDYIGAPNA-O_left_rot && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/ARBOUKQKGDLYJY-PFPMLOGWNA-N_left_invert && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/ARBOUKQKGDLYJY-PFPMLOGWNA-N_right_invert && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/ARBOUKQKGDLYJY-PFPMLOGWNA-N_right_rot && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/CAMFOMFEKZVSBT-DQDYIGAPNA-O_right_rot && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/relaxed_scan/ARBOUKQKGDLYJY-PFPMLOGWNA-N_left_rot && bash job.sh && cd - 

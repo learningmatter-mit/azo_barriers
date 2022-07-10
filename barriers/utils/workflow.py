@@ -930,7 +930,8 @@ def conf_g_from_many(dirs,
     return conf_g, delta_mean_e
 
 
-def get_confgen_dirs(direc):
+def get_confgen_dirs(direc,
+                     extra_keys=None):
     if 'endpoint' in direc:
         return [direc]
 
@@ -946,9 +947,24 @@ def get_confgen_dirs(direc):
             continue
         if base_name not in folder:
             continue
+        if extra_keys is not None:
+            match = True
+            for key in extra_keys:
+                if key not in folder:
+                    match = False
+                    break
+            if not match:
+                continue
         all_dirs.append(folder)
 
     return all_dirs
+
+
+def get_rot_dirs(direc):
+    rot_dirs = get_confgen_dirs(direc=direc,
+                                extra_keys=['_rot'])
+
+    return rot_dirs
 
 
 def get_conf_g(confgen_sub_dir,
@@ -957,28 +973,39 @@ def get_conf_g(confgen_sub_dir,
     conf_g, de = conf_g_from_many(dirs=[confgen_sub_dir],
                                   dic_w_ens=dic_w_ens)
     confgen_dirs = get_confgen_dirs(direc=confgen_sub_dir)
+    rot_dirs = get_rot_dirs(direc=confgen_sub_dir)
+
     total_conf_g, total_de = conf_g_from_many(dirs=confgen_dirs,
                                               dic_w_ens=dic_w_ens)
+    rot_conf_g, rot_de = conf_g_from_many(dirs=rot_dirs,
+                                          dic_w_ens=dic_w_ens)
 
     results = {"conf_g": conf_g,
+               "rot_conf_g": rot_conf_g,
                "total_conf_g": total_conf_g,
                "de": de,
+               "rot_de": rot_de,
                "total_de": total_de}
 
     return results
 
 
-def update_w_conf_g(conf_g,
-                    de,
-                    total_conf_g,
-                    total_de,
+def update_w_conf_g(conf_results,
                     dic):
 
     free_en = copy.deepcopy(dic['free_energy'])
     enthalpy = copy.deepcopy(dic['enthalpy'])
     vib_entropy = copy.deepcopy(dic['entropy'])
 
+    conf_g = conf_results["conf_g"]
+    de = conf_results["de"]
+    rot_conf_g = conf_results["rot_conf_g"]
+    rot_de = conf_results["rot_de"]
+    total_conf_g = conf_results["total_conf_g"]
+    total_de = conf_results["total_de"]
+
     prefix = 'ts_specific'
+    rot_prefix = 'rot'
 
     dic.update({"%s_conf_free_energy" % prefix: conf_g,
                 "%s_avg_conf_energy" % prefix: de,
@@ -986,6 +1013,13 @@ def update_w_conf_g(conf_g,
                 "%s_entropy" % prefix: vib_entropy - conf_g,
                 "%s_free_energy" % prefix: free_en + conf_g + de,
                 "%s_enthalpy" % prefix: enthalpy + de})
+
+    dic.update({"%s_conf_free_energy" % rot_prefix: rot_conf_g,
+                "%s_avg_conf_energy" % rot_prefix: rot_de,
+                "%s_conf_entropy" % rot_prefix: -rot_conf_g,
+                "%s_entropy" % rot_prefix: vib_entropy - rot_conf_g,
+                "%s_free_energy" % rot_prefix: free_en + rot_conf_g + rot_de,
+                "%s_enthalpy" % rot_prefix: enthalpy + rot_de})
 
     dic.update({"conf_free_energy": total_conf_g,
                 "avg_conf_energy": total_de,
@@ -1030,10 +1064,7 @@ def make_ts_summary(ts_sub_dir,
     conf_results = get_conf_g(confgen_sub_dir=confgen_sub_dir,
                               dic_w_ens=dic_w_ens)
 
-    update_w_conf_g(conf_g=conf_results["conf_g"],
-                    de=conf_results["de"],
-                    total_conf_g=conf_results["total_conf_g"],
-                    total_de=conf_results["total_de"],
+    update_w_conf_g(conf_results=conf_results,
                     dic=ts_summary)
 
     return ts_summary
@@ -1180,14 +1211,11 @@ def make_end_summary(hess_sub_dir,
                 val = val[0]
         hess_summary[translate.get(key, key)] = val
 
-    confgen_sub_dir = hess_sub_dir.replace(
-        "hessian", "confgen").split("_conf_")[0]
+    confgen_sub_dir = hess_sub_dir.replace("hessian", "confgen"
+                                           ).split("_conf_")[0]
     conf_results = get_conf_g(confgen_sub_dir=confgen_sub_dir,
                               dic_w_ens=dic_w_ens)
-    update_w_conf_g(conf_g=conf_results["conf_g"],
-                    de=conf_results["de"],
-                    total_conf_g=conf_results["total_conf_g"],
-                    total_de=conf_results["total_de"],
+    update_w_conf_g(conf_results=conf_results,
                     dic=hess_summary)
 
     return hess_summary
@@ -1236,28 +1264,39 @@ def make_mech_ts_summary(ts_dic,
                          sub_dic,
                          end_key,
                          include_irc,
-                         name='ts'):
+                         name='ts',
+                         prefix=''):
 
     ts_summary = {"%s_nxyz" % name: ts_dic["nxyz"],
                   "endpoint_nxyz": sub_dic.get(end_key, {}).get("nxyz")}
 
-    use_keys = ['free_energy',
-                'energy',
-                'entropy',
-                'enthalpy',
-                'free_energy_no_conf',
-                'conf_free_energy',
-                'conf_entropy',
-                'vib_entropy',
-                'avg_conf_energy']
+    keys = ['free_energy',
+            'energy',
+            'entropy',
+            'enthalpy',
+            'free_energy_no_conf',
+            'conf_free_energy',
+            'conf_entropy',
+            'vib_entropy',
+            'avg_conf_energy']
 
-    use_keys += ["eff_%s" % i for i in use_keys]
+    keys += ["eff_%s" % i for i in keys]
 
     end_dic = sub_dic.get(end_key, {})
-    for key in use_keys:
-        end_val = end_dic.get(key)
-        if end_val is None:
-            end_val = end_dic.get(key.replace("eff_", ""))
+    for key in keys:
+
+        use_key = prefix + key
+        if use_key in end_dic:
+            end_val = end_dic[use_key]
+        elif use_key.replace("eff_", "") in end_dic:
+            end_val = end_dic[use_key.replace("eff_", "")]
+        elif key in end_dic:
+            end_val = end_dic[key]
+        elif key.replace("eff_", "") in end_dic:
+            end_val = end_dic[key.replace("eff_", "")]
+        else:
+            end_val = None
+
         if end_val is None:
             continue
 
@@ -1277,8 +1316,12 @@ def make_mech_ts_summary(ts_dic,
         ts_summary[new_key] = (ts_summary[key] * ENTROPY_CONV)
         ts_summary.pop(key)
 
-    ts_summary.update({"endpoint_conf_free_energy": end_dic.get("conf_free_energy"),
-                       "%s_conf_free_energy" % name: ts_dic.get("conf_free_energy")})
+    ts_summary.update(
+        {"endpoint_conf_free_energy": end_dic.get("conf_free_energy"),
+         "%s_conf_free_energy" % name: ts_dic.get("%sconf_free_energy" % prefix)
+         }
+    )
+
     for key in ['mechanism', 'confnum']:
         if ts_dic.get(key) is not None:
             ts_summary.update({key: ts_dic[key]})
@@ -1345,6 +1388,10 @@ def update_mech_w_isc(final_info_dict):
                                                        sub_dic=sub_dic,
                                                        end_key=end_key,
                                                        name='s_t_crossing',
+                                                       # only want conf_g info from
+                                                       # rotational TSs
+                                                       prefix='rot_',
+                                                       # prefix='',
                                                        include_irc=False)
                     s_t_summary.update({"endpoint": s_t_dic["endpoint"],
                                         "t_isc": s_t_dic["t_isc"]})

@@ -1,4 +1,0 @@
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/hessian/CAMFOMFEKZVSBT-LUNMOKHJNA-O_endpoint_conf_1 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/hessian/CAMFOMFEKZVSBT-DQDYIGAPNA-O_endpoint_conf_1 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/hessian/ARBOUKQKGDLYJY-ZSKUTIJPNA-N_endpoint_conf_1 && bash job.sh && cd - 
-cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/hessian/ARBOUKQKGDLYJY-PFPMLOGWNA-N_endpoint_conf_1 && bash job.sh && cd - 

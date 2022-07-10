@@ -1,5 +1,0 @@
-The smiles strings that will be run are:
-CCN(CC)c1ccc(/N=N\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1
-Analysing smiles string CCN(CC)c1ccc(/N=N\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1
-Generating initial conformations
-Minimising conformations using the mmff force field
