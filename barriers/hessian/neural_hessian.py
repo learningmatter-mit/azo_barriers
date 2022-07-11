@@ -1,9 +1,9 @@
-from neuralnet.vib import hessian_and_modes
-from neuralnet.utils.barriers.evf import get_atoms, to_json
 import json
 import argparse
 from rdkit import Chem
 from barriers.utils.ase_neb import get_calc_kwargs, load_params
+from barriers.utils.vib import hessian_and_modes
+from barriers.evf.neural_evf import get_atoms, to_json
 from nff.io.ase import NeuralFF
 from nff.utils import constants as const
 
