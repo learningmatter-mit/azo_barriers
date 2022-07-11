@@ -3,27 +3,27 @@
     "triplet_weightpath": "../models/triplet/0",
     "s0_s1_weightpath": "../models/s0_s1/0",
     "smiles_list": [
-        "CCN(CC)c1ccc(/N=N\\c2ccc(NC(=O)C[N+](CC)(CC)CC)cc2)cc1",
-        "CCN(c1ccccc1)c1cc(C(=O)NOC)ccc1/N=N/c1ccc(C(=O)NOC)cc1N(CC)c1ccccc1"
+        "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1",
+        "CC(=O)Nc1ccc(/N=N\\c2ccc(NC(C)=O)cc2)cc1"
     ],
     "device": 2,
     "rdkit_confgen": {},
     "relaxed_scan": {},
     "confgen": {
-        "num_parallel": 10,
+        "num_parallel": 20,
         "num_in_chunk": 100
     },
     "evf": {
-        "num_parallel": 1
+        "num_parallel": 4
     },
     "hessian": {
-        "num_parallel": 2
+        "num_parallel": 4
     },
     "irc": {
-        "num_parallel": 1
+        "num_parallel": 4
     },
     "triplet_crossing": {
-        "num_parallel": 1
+        "num_parallel": 4
     },
     "s0_s1_gap": {}
 }

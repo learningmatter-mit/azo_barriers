@@ -2,7 +2,7 @@
     "weightpath": null,
     "smiles": null,
     "nxyz": null,
-    "num_parallel": 10,
+    "num_parallel": 20,
     "num_in_chunk": 100,
     "nnid": "",
     "en_key": "energy_0",
