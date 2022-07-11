@@ -1166,7 +1166,6 @@ def filter_by_done(final_info_dict):
         endpoints_convg = [sub_dic[isomer]['converged'] for isomer in
                            ['cis', 'trans']]
 
-
         if num_done >= 4 and all(endpoints_convg):
             keep_keys.append(key)
 
