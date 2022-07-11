@@ -1,0 +1,40 @@
+{
+    "csv_data_path": "smiles.csv",
+    "max_confs": 100,
+    "forcefield": "mmff",
+    "nconf_gen": 1500,
+    "e_window": 0.3,
+    "rms_tol": 0.3,
+    "prun_tol": 0.5,
+    "job_dir": "confs",
+    "log_file": "confgen.log",
+    "rep_e_window": 5.0,
+    "fallback_to_align": false,
+    "temp": 298.15,
+    "pickle_save_dir": ".",
+    "summary_save_dir": ".",
+    "clean_up": true,
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/singlet/0",
+    "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/triplet/0",
+    "s0_s1_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/s0_s1/0",
+    "device": 2,
+    "rdkit_confgen": {},
+    "relaxed_scan": {},
+    "confgen": {
+        "num_parallel": 20,
+        "num_in_chunk": 100
+    },
+    "evf": {
+        "num_parallel": 4
+    },
+    "hessian": {
+        "num_parallel": 4
+    },
+    "irc": {
+        "num_parallel": 4
+    },
+    "triplet_crossing": {
+        "num_parallel": 4
+    },
+    "s0_s1_gap": {}
+}

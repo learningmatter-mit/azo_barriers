@@ -1,0 +1,270 @@
+{
+    "weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/singlet/0",
+    "smiles": "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1",
+    "nxyz": [
+        [
+            9.0,
+            3.6433000564575195,
+            -1.2906999588012695,
+            1.9176000356674194
+        ],
+        [
+            6.0,
+            2.8886001110076904,
+            -0.5730000138282776,
+            1.0546000003814697
+        ],
+        [
+            6.0,
+            2.1714000701904297,
+            0.5297999978065491,
+            1.4629000425338745
+        ],
+        [
+            6.0,
+            1.413699984550476,
+            1.2244999408721924,
+            0.521399974822998
+        ],
+        [
+            9.0,
+            0.7240999937057495,
+            2.308300018310547,
+            0.9132999777793884
+        ],
+        [
+            6.0,
+            1.3631000518798828,
+            0.840399980545044,
+            -0.7953000068664551
+        ],
+        [
+            7.0,
+            0.6277999877929688,
+            1.493899941444397,
+            -1.7883000373840332
+        ],
+        [
+            7.0,
+            -0.5985000133514404,
+            1.368299961090088,
+            -1.8867000341415405
+        ],
+        [
+            6.0,
+            -1.3444000482559204,
+            0.569100022315979,
+            -1.0195000171661377
+        ],
+        [
+            6.0,
+            -1.3944000005722046,
+            -0.8029999732971191,
+            -1.0708999633789062
+        ],
+        [
+            9.0,
+            -0.7124999761581421,
+            -1.4817999601364136,
+            -1.99590003490448
+        ],
+        [
+            6.0,
+            -2.1682000160217285,
+            -1.5296000242233276,
+            -0.1688999980688095
+        ],
+        [
+            6.0,
+            -2.90339994430542,
+            -0.8780999779701233,
+            0.79830002784729
+        ],
+        [
+            9.0,
+            -3.67330002784729,
+            -1.5082999467849731,
+            1.7036000490188599
+        ],
+        [
+            6.0,
+            -2.8696000576019287,
+            0.5123999714851379,
+            0.8701000213623047
+        ],
+        [
+            6.0,
+            -2.0915000438690186,
+            1.1929999589920044,
+            -0.040800001472234726
+        ],
+        [
+            9.0,
+            -2.109299898147583,
+            2.5638999938964844,
+            0.07580000162124634
+        ],
+        [
+            6.0,
+            2.105600118637085,
+            -0.28360000252723694,
+            -1.1694999933242798
+        ],
+        [
+            9.0,
+            2.122299909591675,
+            -0.7300999760627747,
+            -2.4563000202178955
+        ],
+        [
+            6.0,
+            2.8610999584198,
+            -0.984000027179718,
+            -0.25369998812675476
+        ],
+        [
+            1.0,
+            2.186300039291382,
+            0.8611999750137329,
+            2.489000082015991
+        ],
+        [
+            1.0,
+            -2.227799892425537,
+            -2.6064999103546143,
+            -0.18320000171661377
+        ],
+        [
+            1.0,
+            -3.435699939727783,
+            1.05649995803833,
+            1.617900013923645
+        ],
+        [
+            1.0,
+            3.421299934387207,
+            -1.8526999950408936,
+            -0.5953999757766724
+        ]
+    ],
+    "num_parallel": 20,
+    "num_in_chunk": 100,
+    "nnid": "",
+    "en_key": "energy_0",
+    "model_kwargs": null,
+    "device": 2,
+    "cutoff": 5.0,
+    "cutoff_skin": 2.0,
+    "nbr_list_update_freq": 10,
+    "directed": true,
+    "requires_large_offsets": false,
+    "md_type": "NoseHooverMetaDynamics",
+    "geom_add_time": 1000,
+    "mtd_time": 15.0,
+    "infer_time_from_flex": true,
+    "time_step": 2.0,
+    "temperature": 298.15,
+    "ttime": 50,
+    "maxwell_temp": null,
+    "loginterval": 10,
+    "fixed_atoms": {
+        "idx": null,
+        "template_smiles": null
+    },
+    "constraints": {
+        "hookean": {
+            "bonds": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 2242.34
+            },
+            "angles": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 627.5
+            },
+            "dihedrals": {
+                "idx": null,
+                "template_smiles": null,
+                "targets": null,
+                "force_consts": 627.5
+            }
+        }
+    },
+    "opt_constraints": null,
+    "enhanced_sampling": {
+        "method": "NoseHooverMetaDynamics",
+        "params": {
+            "pushing_params": {
+                "kappa": 0.03,
+                "k_i": 1.5,
+                "alpha_i": 0.5,
+                "bias_type": "rmsd",
+                "max_ref_structures": 100000
+            }
+        },
+        "shake": false
+    },
+    "exclude_from_rmsd": {
+        "idx": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "template_smiles": "c1ccc(/N=N/c2ccccc2)cc1"
+    },
+    "sample_rate_fs": 100,
+    "lower_e_tol": 0.2,
+    "max_md_runs": 5,
+    "min_md_runs": 2,
+    "fmax_coarse": 0.2,
+    "fmax_tight": 0.05,
+    "fmax_vtight": 0.005,
+    "window_coarse": 15.0,
+    "window_tight": 8.0,
+    "window_vtight": 2.5,
+    "opt_type": "LBFGS",
+    "opt_max_step": 1500,
+    "check_hess": false,
+    "max_restart_opt": 1,
+    "crest_dedupe": {
+        "on": true,
+        "params": {
+            "ethr": 0.15,
+            "rthr": 0.175,
+            "bthr": 0.03,
+            "ewin": 10000
+        }
+    },
+    "triplet_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/triplet/0",
+    "s0_s1_weightpath": "/home/saxelrod/Repo/projects/azo_barriers/examples/../models/s0_s1/0",
+    "smiles_list": [
+        "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1",
+        "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N\\c2ccccc2N(C)Cc2ccccn2)cc1C"
+    ],
+    "rdkit_confgen": {},
+    "relaxed_scan": {},
+    "confgen": {
+        "num_parallel": 20,
+        "num_in_chunk": 100
+    },
+    "evf": {
+        "num_parallel": 4
+    },
+    "hessian": {
+        "num_parallel": 4
+    },
+    "irc": {
+        "num_parallel": 4
+    },
+    "triplet_crossing": {
+        "num_parallel": 4
+    },
+    "s0_s1_gap": {},
+    "inchikey": "HMLFKPVOBDCWOV-VXPUYCOJNA-N",
+    "geom_type": "endpoint",
+    "steps": 7500
+}

@@ -1,0 +1,8 @@
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/PZCDREJVPJOQNP-ULIFNZDWNA-N_right_invert_conf_5 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/PZCDREJVPJOQNP-ULIFNZDWNA-N_left_invert_conf_1 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/PZCDREJVPJOQNP-ULIFNZDWNA-N_right_rot_conf_1 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/HMLFKPVOBDCWOV-FMQUCBEENA-N_left_rot_conf_1 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/HMLFKPVOBDCWOV-FMQUCBEENA-N_right_invert_conf_2 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/HMLFKPVOBDCWOV-FMQUCBEENA-N_left_invert_conf_1 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/HMLFKPVOBDCWOV-FMQUCBEENA-N_right_rot_conf_1 && bash job.sh && cd - 
+cd /home/saxelrod/Repo/projects/azo_barriers/examples/results/irc/PZCDREJVPJOQNP-ULIFNZDWNA-N_left_rot_conf_3 && bash job.sh && cd - 

@@ -1,0 +1,42 @@
+{
+    "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1": {
+        "totalconfs": 8,
+        "uniqueconfs": 8,
+        "temperature": 298.15,
+        "lowestenergy": 0.07215350244075557,
+        "poplowestpct": 43.21819977650521,
+        "charge": 0,
+        "smiles": "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/HMLFKPVOBDCWOV-VXPUYCOJNA-N.pickle"
+    },
+    "Fc1cc(F)c(/N=N/c2c(F)cc(F)cc2F)c(F)c1": {
+        "totalconfs": 15,
+        "uniqueconfs": 15,
+        "temperature": 298.15,
+        "lowestenergy": 0.05668687220549326,
+        "poplowestpct": 81.44761494050665,
+        "charge": 0,
+        "smiles": "Fc1cc(F)c(/N=N/c2c(F)cc(F)cc2F)c(F)c1",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/HMLFKPVOBDCWOV-FMQUCBEENA-N.pickle"
+    },
+    "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N\\c2ccccc2N(C)Cc2ccccn2)cc1C": {
+        "totalconfs": 15,
+        "uniqueconfs": 15,
+        "temperature": 298.15,
+        "lowestenergy": 0.400214974784489,
+        "poplowestpct": 91.07851257025399,
+        "charge": 0,
+        "smiles": "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N\\c2ccccc2N(C)Cc2ccccn2)cc1C",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/PZCDREJVPJOQNP-KARKAFJINA-N.pickle"
+    },
+    "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N/c2ccccc2N(C)Cc2ccccn2)cc1C": {
+        "totalconfs": 36,
+        "uniqueconfs": 36,
+        "temperature": 298.15,
+        "lowestenergy": 0.38040931160733676,
+        "poplowestpct": 42.70293199152112,
+        "charge": 0,
+        "smiles": "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N/c2ccccc2N(C)Cc2ccccn2)cc1C",
+        "pickle_path": "/home/saxelrod/Repo/projects/azo_barriers/examples/results/rdkit_confgen/PZCDREJVPJOQNP-ULIFNZDWNA-N.pickle"
+    }
+}
