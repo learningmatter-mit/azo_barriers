@@ -4,7 +4,7 @@
     "s0_s1_weightpath": "../models/s0_s1/0",
     "smiles_list": [
         "Fc1cc(F)c(/N=N\\c2c(F)cc(F)cc2F)c(F)c1",
-        "CC(=O)Nc1ccc(/N=N\\c2ccc(NC(C)=O)cc2)cc1"
+        "CC(=O)Oc1cc(N(C)Cc2ccccn2)c(/N=N\\c2ccccc2N(C)Cc2ccccn2)cc1C"
     ],
     "device": 2,
     "rdkit_confgen": {},

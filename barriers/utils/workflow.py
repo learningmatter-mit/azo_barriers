@@ -1166,6 +1166,7 @@ def filter_by_done(final_info_dict):
         endpoints_convg = [sub_dic[isomer]['converged'] for isomer in
                            ['cis', 'trans']]
 
+
         if num_done >= 4 and all(endpoints_convg):
             keep_keys.append(key)
 
@@ -1772,14 +1773,12 @@ def eval_dann(dset,
                                    loss_fn=null_loss,
                                    device=device)
 
-    if len(results['energy_1'][0].shape) == 0:
+    if len(results['energy_0'][0].shape) == 0:
         op = torch.stack
     else:
         op = torch.cat
 
-    gaps = (op(results['energy_1']).reshape(-1) -
-            op(results['energy_0']).reshape(-1)
-            ).numpy() / const.EV_TO_KCAL_MOL
+    gaps = (op(results['energy_0']).reshape(-1)).numpy() / const.EV_TO_KCAL_MOL
 
     keys = batches['key']
     assert len(keys) == len(gaps)

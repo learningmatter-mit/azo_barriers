@@ -63,10 +63,6 @@ def add_converged(atoms,
     imgfreq = len((freqs < imag_cutoff).nonzero()[0])
     grad = atoms.get_forces()
 
-    fmax = abs(grad).max()
-    with open('fmax', 'w') as f:
-        f.write(str(fmax))
-
     converged = fmax < ev_kwargs["convergence"]
     converged = all([converged,
                      freqs[0] <= ts_cutoff,
