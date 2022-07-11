@@ -9,7 +9,7 @@ if [ "$exists" == "True" ]; then
     echo 'Barriers conda environment already exists; skipping environment installation'
 else
     # upgrade conda
-    conda upgrade conda
+    conda upgrade conda -y
     # install environment
     conda env create -f environment.yml
 fi

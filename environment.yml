@@ -278,7 +278,7 @@ dependencies:
     - django-extensions==3.1.5
     - e3fp==1.2.3
     - fastjsonschema==2.15.3
-    - ipykernel==6.15.1
+    - ipykernel==6.13.0
     - ipython-genutils==0.2.0
     - ipywidgets==7.7.0
     - jsonschema==4.5.1
