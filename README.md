@@ -2,12 +2,14 @@
 
 This repository contains code for computing the thermal barriers of azobenzene derivatives. The code base uses a neural network force field (NFF) to compute energies and gradients. These are in turn used to optimize reactants, products, transition states, and singlet-triplet crossing points for intersystem crossing. If you use this repository, please cite our paper:
 
+```
 @article{axelrod2022thermal,
   title={Thermal half-lives of azobenzene derivatives: virtual screening based on intersystem crossing using a machine learning potential},
   author={Axelrod, Simon and Shakhnovich, Eugene and Gomez-Bombarelli, Rafael},
   journal={arXiv preprint arXiv:2207.11592},
   year={2022}
 }
+```
 
 This code repository is developed in the Learning Matter Lab (led by prof. Rafael Gomez-Bombarelli) at MIT.
 
