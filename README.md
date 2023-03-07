@@ -5,11 +5,15 @@ This repository contains code for computing the thermal barriers of azobenzene d
 If you use this repository, please cite our paper:
 
 ```
-@article{axelrod2022thermal,
+@article{axelrod2023thermal,
   title={Thermal half-lives of azobenzene derivatives: virtual screening based on intersystem crossing using a machine learning potential},
   author={Axelrod, Simon and Shakhnovich, Eugene and Gomez-Bombarelli, Rafael},
-  journal={arXiv preprint arXiv:2207.11592},
-  year={2022}
+  journal={ACS Central Science},
+  volume={9},
+  number={2},
+  pages={166-176},
+  year={2023},
+  publisher={ACS Publications}
 }
 ```
 
